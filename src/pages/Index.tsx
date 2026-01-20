@@ -22,7 +22,7 @@ const Index = () => {
   }
   return <div className="flex flex-col items-center justify-center min-h-[calc(100vh-5rem)] px-6">
       <div className="animate-fade-in">
-        <img alt="Cuore Bake & Craft Studio" className="w-64 h-auto" src="/lovable-uploads/2b17aef0-7cc0-4bbb-998b-35683f9d5ea2.png" />
+        <img alt="Cuore Bake & Craft Studio" className="w-64 h-auto object-scale-down" src="/lovable-uploads/91a6aba3-531a-45da-a655-0019ae86492a.png" />
       </div>
       <p className="mt-8 text-muted-foreground font-body text-sm tracking-wide">
         Suas receitas favoritas em um só lugar
