@@ -1,24 +1,48 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowLeft, PenLine } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
+import { useCreateRecipe } from "@/hooks/useRecipes";
 
 const AddRecipeManual = () => {
   const navigate = useNavigate();
+  const { user, loading: authLoading } = useAuth();
+  const createRecipe = useCreateRecipe();
   const [title, setTitle] = useState("");
   const [ingredients, setIngredients] = useState("");
   const [instructions, setInstructions] = useState("");
+  const [category, setCategory] = useState("");
+  const [prepTime, setPrepTime] = useState("");
+  const [cookTime, setCookTime] = useState("");
+  const [servings, setServings] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!title.trim()) {
-      toast.error("Por favor, insira um título");
-      return;
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate("/auth");
     }
-    toast.success("Funcionalidade em breve!");
+  }, [user, authLoading, navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title.trim()) return;
+
+    await createRecipe.mutateAsync({
+      title: title.trim(),
+      ingredients: ingredients.trim() || null,
+      instructions: instructions.trim() || null,
+      category: category.trim() || null,
+      prep_time: prepTime ? parseInt(prepTime) : null,
+      cook_time: cookTime ? parseInt(cookTime) : null,
+      servings: servings ? parseInt(servings) : null,
+      image_url: null,
+      source_url: null,
+      is_favorite: false,
+    });
+
+    navigate("/recipes");
   };
 
   return (
@@ -41,7 +65,7 @@ const AddRecipeManual = () => {
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
           <label className="block text-sm font-body text-muted-foreground mb-2">
-            Título da Receita
+            Título da Receita *
           </label>
           <Input
             type="text"
@@ -49,7 +73,60 @@ const AddRecipeManual = () => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="h-12"
+            required
           />
+        </div>
+
+        <div>
+          <label className="block text-sm font-body text-muted-foreground mb-2">
+            Categoria
+          </label>
+          <Input
+            type="text"
+            placeholder="Ex: Doces, Salgados, Bebidas..."
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="h-12"
+          />
+        </div>
+
+        <div className="grid grid-cols-3 gap-3">
+          <div>
+            <label className="block text-sm font-body text-muted-foreground mb-2">
+              Preparo (min)
+            </label>
+            <Input
+              type="number"
+              placeholder="15"
+              value={prepTime}
+              onChange={(e) => setPrepTime(e.target.value)}
+              className="h-12"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-body text-muted-foreground mb-2">
+              Cozimento (min)
+            </label>
+            <Input
+              type="number"
+              placeholder="30"
+              value={cookTime}
+              onChange={(e) => setCookTime(e.target.value)}
+              className="h-12"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-body text-muted-foreground mb-2">
+              Porções
+            </label>
+            <Input
+              type="number"
+              placeholder="4"
+              value={servings}
+              onChange={(e) => setServings(e.target.value)}
+              className="h-12"
+            />
+          </div>
         </div>
 
         <div>
@@ -76,8 +153,12 @@ const AddRecipeManual = () => {
           />
         </div>
 
-        <Button type="submit" className="w-full h-12">
-          Salvar Receita
+        <Button 
+          type="submit" 
+          className="w-full h-12" 
+          disabled={createRecipe.isPending || !title.trim()}
+        >
+          {createRecipe.isPending ? "Salvando..." : "Salvar Receita"}
         </Button>
       </form>
     </div>

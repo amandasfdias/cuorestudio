@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { BookOpen, Heart, Clock, ChefHat } from "lucide-react";
+import { Heart, Clock, ChefHat, ArrowLeft } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useRecipes, useToggleFavorite } from "@/hooks/useRecipes";
+import { useFavoriteRecipes, useToggleFavorite } from "@/hooks/useRecipes";
 
-const Recipes = () => {
+const Favorites = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const { data: recipes, isLoading } = useRecipes();
+  const { data: favorites, isLoading } = useFavoriteRecipes();
   const toggleFavorite = useToggleFavorite();
 
   useEffect(() => {
@@ -16,12 +16,14 @@ const Recipes = () => {
     }
   }, [user, authLoading, navigate]);
 
+  const handleToggleFavorite = (e: React.MouseEvent, id: string, currentStatus: boolean) => {
+    e.stopPropagation();
+    toggleFavorite.mutate({ id, isFavorite: !currentStatus });
+  };
+
   if (authLoading || isLoading) {
     return (
       <div className="px-6 py-8">
-        <h1 className="font-display text-4xl font-bold text-foreground mb-6">
-          Minhas Receitas
-        </h1>
         <div className="flex items-center justify-center py-16">
           <div className="animate-pulse text-muted-foreground">Carregando...</div>
         </div>
@@ -29,32 +31,38 @@ const Recipes = () => {
     );
   }
 
-  const handleToggleFavorite = (e: React.MouseEvent, id: string, currentStatus: boolean) => {
-    e.stopPropagation();
-    toggleFavorite.mutate({ id, isFavorite: !currentStatus });
-  };
-
   return (
     <div className="px-6 py-8">
-      <h1 className="font-display text-4xl font-bold text-foreground mb-6">
-        Minhas Receitas
-      </h1>
-      
-      {!recipes || recipes.length === 0 ? (
+      <button
+        onClick={() => navigate(-1)}
+        className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6"
+      >
+        <ArrowLeft className="w-5 h-5" />
+        <span className="font-body">Voltar</span>
+      </button>
+
+      <div className="flex items-center gap-3 mb-6">
+        <Heart className="w-6 h-6 text-destructive fill-destructive" />
+        <h1 className="font-display text-4xl font-bold text-foreground">
+          Favoritas
+        </h1>
+      </div>
+
+      {!favorites || favorites.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <div className="w-20 h-20 rounded-full bg-secondary flex items-center justify-center mb-4">
-            <BookOpen className="w-8 h-8 text-muted-foreground" />
+            <Heart className="w-8 h-8 text-muted-foreground" />
           </div>
           <h2 className="font-display text-2xl text-foreground mb-2">
-            Nenhuma receita ainda
+            Nenhuma favorita ainda
           </h2>
           <p className="text-muted-foreground font-body text-sm max-w-xs">
-            Toque no botão + para adicionar sua primeira receita
+            Toque no coração de uma receita para adicioná-la aqui
           </p>
         </div>
       ) : (
         <div className="grid gap-4">
-          {recipes.map((recipe) => (
+          {favorites.map((recipe) => (
             <button
               key={recipe.id}
               onClick={() => navigate(`/recipe/${recipe.id}`)}
@@ -81,13 +89,7 @@ const Recipes = () => {
                       onClick={(e) => handleToggleFavorite(e, recipe.id, recipe.is_favorite)}
                       className="flex-shrink-0"
                     >
-                      <Heart
-                        className={`w-5 h-5 transition-colors ${
-                          recipe.is_favorite
-                            ? "fill-destructive text-destructive"
-                            : "text-muted-foreground hover:text-foreground"
-                        }`}
-                      />
+                      <Heart className="w-5 h-5 fill-destructive text-destructive" />
                     </button>
                   </div>
                   {recipe.category && (
@@ -113,4 +115,4 @@ const Recipes = () => {
   );
 };
 
-export default Recipes;
+export default Favorites;
