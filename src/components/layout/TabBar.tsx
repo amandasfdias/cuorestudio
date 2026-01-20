@@ -1,12 +1,19 @@
 import { Home, BookOpen, Plus, Scale, User } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import AddRecipeModal from "../recipes/AddRecipeModal";
 
 const TabBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+  // Don't show tab bar on auth page
+  if (location.pathname === "/auth") {
+    return null;
+  }
 
   const tabs = [
     { path: "/", icon: Home, label: "Home" },
@@ -18,7 +25,11 @@ const TabBar = () => {
 
   const handleTabClick = (tab: typeof tabs[0]) => {
     if (tab.isAction) {
-      setIsAddModalOpen(true);
+      if (user) {
+        setIsAddModalOpen(true);
+      } else {
+        navigate("/auth");
+      }
     } else {
       navigate(tab.path);
     }
