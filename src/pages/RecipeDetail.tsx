@@ -201,7 +201,7 @@ const RecipeDetail = () => {
             <div className="bg-secondary rounded-lg p-5 space-y-3">
               {ingredientsList.map((ingredient, index) => (
                 <div key={index} className="flex items-start gap-3">
-                  <Heart className="w-4 h-4 mt-0.5 text-destructive fill-destructive flex-shrink-0" />
+                  <span className="text-sm flex-shrink-0">♥</span>
                   <span className="font-body text-sm text-foreground leading-relaxed">
                     {applyMultiplier(ingredient)}
                   </span>
