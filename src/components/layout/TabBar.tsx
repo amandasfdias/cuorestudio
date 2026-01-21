@@ -19,7 +19,7 @@ const TabBar = () => {
     { path: "/", icon: Home, label: "Home" },
     { path: "/recipes", icon: BookOpen, label: "Receitas" },
     { path: "add", icon: Plus, label: "Adicionar", isAction: true },
-    { path: "/conversions", icon: Scale, label: "Conversões" },
+    { path: "/conversions", icon: Scale, label: "Medidas" },
     { path: "/account", icon: User, label: "Conta" },
   ];
 
