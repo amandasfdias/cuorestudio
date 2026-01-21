@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Heart, Clock, Users, Trash2, ExternalLink, Minus, Plus, StickyNote } from "lucide-react";
+import { ArrowLeft, Heart, Clock, Users, Trash2, ExternalLink, Minus, Plus, StickyNote, Camera } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useRecipe, useToggleFavorite, useDeleteRecipe } from "@/hooks/useRecipes";
+import { useRecipe, useToggleFavorite, useDeleteRecipe, useUpdateRecipe } from "@/hooks/useRecipes";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,11 +23,14 @@ const RecipeDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
-  const { data: recipe, isLoading } = useRecipe(id || "");
+  const { data: recipe, isLoading, refetch } = useRecipe(id || "");
   const toggleFavorite = useToggleFavorite();
   const deleteRecipe = useDeleteRecipe();
+  const updateRecipe = useUpdateRecipe();
   const [multiplier, setMultiplier] = useState(1);
   const [notes, setNotes] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -37,6 +42,36 @@ const RecipeDetail = () => {
     if (id) {
       await deleteRecipe.mutateAsync(id);
       navigate("/recipes");
+    }
+  };
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !id || !user) return;
+
+    setUploading(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const filePath = `${user.id}/${id}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('recipe-images')
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('recipe-images')
+        .getPublicUrl(filePath);
+
+      await updateRecipe.mutateAsync({ id, updates: { image_url: publicUrl } });
+      refetch();
+      toast.success("Foto adicionada com sucesso!");
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast.error("Erro ao enviar foto");
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -95,7 +130,16 @@ const RecipeDetail = () => {
 
   return (
     <div className="pb-8">
-      {recipe.image_url && (
+      {/* Hidden file input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleImageUpload}
+        className="hidden"
+      />
+
+      {recipe.image_url ? (
         <div className="relative h-48 w-full">
           <img
             src={recipe.image_url}
@@ -109,18 +153,30 @@ const RecipeDetail = () => {
             <ArrowLeft className="w-5 h-5" />
           </button>
         </div>
+      ) : (
+        <div className="relative h-48 w-full bg-secondary flex flex-col items-center justify-center gap-3">
+          <button
+            onClick={() => navigate(-1)}
+            className="absolute top-4 left-4 w-10 h-10 rounded-full bg-background/80 backdrop-blur flex items-center justify-center"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+            className="flex flex-col items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <div className="w-14 h-14 rounded-full bg-background flex items-center justify-center">
+              <Camera className="w-6 h-6" />
+            </div>
+            <span className="font-body text-sm">
+              {uploading ? "Enviando..." : "Adicionar foto"}
+            </span>
+          </button>
+        </div>
       )}
 
       <div className="px-6 py-6 space-y-8">
-        {!recipe.image_url && (
-          <button
-            onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span className="font-body">Voltar</span>
-          </button>
-        )}
 
         <div className="flex items-start justify-between gap-4">
           <h1 className="font-display text-3xl font-bold text-foreground">
@@ -177,7 +233,7 @@ const RecipeDetail = () => {
         {ingredientsList.length > 0 && (
           <div>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-display text-2xl text-foreground">
+              <h2 className="font-display text-2xl text-foreground font-bold">
                 Ingredientes
               </h2>
               <div className="flex items-center gap-3 bg-secondary rounded-full px-3 py-1.5">
@@ -213,7 +269,7 @@ const RecipeDetail = () => {
 
         {instructionsList.length > 0 && (
           <div>
-            <h2 className="font-display text-2xl text-foreground mb-4">
+            <h2 className="font-display text-2xl text-foreground font-bold mb-4">
               Modo de Preparo
             </h2>
             <div className="space-y-4">
@@ -237,7 +293,7 @@ const RecipeDetail = () => {
         <div>
           <div className="flex items-center gap-2 mb-4">
             <StickyNote className="w-5 h-5 text-muted-foreground" />
-            <h2 className="font-display text-2xl text-foreground">
+            <h2 className="font-display text-2xl text-foreground font-bold">
               Notas
             </h2>
           </div>
