@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Recipes from "./pages/Recipes";
 import RecipeDetail from "./pages/RecipeDetail";
+import EditRecipe from "./pages/EditRecipe";
 import Conversions from "./pages/Conversions";
 import Account from "./pages/Account";
 import Favorites from "./pages/Favorites";
@@ -32,6 +33,7 @@ const App = () => (
               <Route path="/auth" element={<Auth />} />
               <Route path="/recipes" element={<Recipes />} />
               <Route path="/recipe/:id" element={<RecipeDetail />} />
+              <Route path="/recipe/:id/edit" element={<EditRecipe />} />
               <Route path="/conversions" element={<Conversions />} />
               <Route path="/account" element={<Account />} />
               <Route path="/favorites" element={<Favorites />} />

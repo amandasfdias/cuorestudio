@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Heart, Clock, Users, Trash2, ExternalLink, Minus, Plus, StickyNote, Camera } from "lucide-react";
+import { ArrowLeft, Heart, Clock, Users, Trash2, ExternalLink, Minus, Plus, StickyNote, Camera, Pencil } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRecipe, useToggleFavorite, useDeleteRecipe, useUpdateRecipe } from "@/hooks/useRecipes";
 import { Button } from "@/components/ui/button";
@@ -139,32 +139,34 @@ const RecipeDetail = () => {
         className="hidden"
       />
 
-      {recipe.image_url ? (
-        <div className="relative h-48 w-full">
-          <img
-            src={recipe.image_url}
-            alt={recipe.title}
-            className="w-full h-full object-cover"
-          />
-          <button
-            onClick={() => navigate(-1)}
-            className="absolute top-4 left-4 w-10 h-10 rounded-full bg-background/80 backdrop-blur flex items-center justify-center"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-        </div>
-      ) : (
-        <div className="relative h-48 w-full bg-secondary flex flex-col items-center justify-center gap-3">
-          <button
-            onClick={() => navigate(-1)}
-            className="absolute top-4 left-4 w-10 h-10 rounded-full bg-background/80 backdrop-blur flex items-center justify-center"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
+      <div className="relative aspect-[4/3] w-full bg-secondary">
+        <button
+          onClick={() => navigate(-1)}
+          className="absolute top-4 left-4 w-10 h-10 rounded-full bg-background/80 backdrop-blur flex items-center justify-center z-10"
+        >
+          <ArrowLeft className="w-5 h-5" />
+        </button>
+        
+        {recipe.image_url ? (
+          <>
+            <img
+              src={recipe.image_url}
+              alt={recipe.title}
+              className="w-full h-full object-cover"
+            />
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading}
+              className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-background/80 backdrop-blur flex items-center justify-center hover:bg-background transition-colors"
+            >
+              <Camera className="w-5 h-5" />
+            </button>
+          </>
+        ) : (
           <button
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
-            className="flex flex-col items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+            className="w-full h-full flex flex-col items-center justify-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
           >
             <div className="w-14 h-14 rounded-full bg-background flex items-center justify-center">
               <Camera className="w-6 h-6" />
@@ -173,8 +175,8 @@ const RecipeDetail = () => {
               {uploading ? "Enviando..." : "Adicionar foto"}
             </span>
           </button>
-        </div>
-      )}
+        )}
+      </div>
 
       <div className="px-6 py-6 space-y-8">
 
@@ -307,28 +309,39 @@ const RecipeDetail = () => {
           </div>
         </div>
 
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button variant="outline" className="w-full gap-2 text-destructive hover:text-destructive">
-              <Trash2 className="w-4 h-4" />
-              Excluir Receita
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle className="font-display text-2xl">Excluir receita?</AlertDialogTitle>
-              <AlertDialogDescription>
-                Esta ação não pode ser desfeita. A receita será permanentemente removida.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                Excluir
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <div className="flex gap-3">
+          <Button 
+            variant="outline" 
+            className="flex-1 gap-2"
+            onClick={() => navigate(`/recipe/${id}/edit`)}
+          >
+            <Pencil className="w-4 h-4" />
+            Editar Receita
+          </Button>
+          
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="outline" className="flex-1 gap-2 text-destructive hover:text-destructive">
+                <Trash2 className="w-4 h-4" />
+                Excluir Receita
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle className="font-display text-2xl">Excluir receita?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Esta ação não pode ser desfeita. A receita será permanentemente removida.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                  Excluir
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
       </div>
     </div>
   );
