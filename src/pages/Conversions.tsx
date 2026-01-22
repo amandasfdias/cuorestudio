@@ -267,13 +267,11 @@ const Conversions = () => {
 
       {/* Dicas */}
       <div className="rounded-lg p-4 mb-6 bg-primary-foreground text-[#bb6f58]">
-        <h2 className="font-display text-lg font-semibold text-foreground mb-2">
-      </h2>
-        <ul className="space-y-2">
-          {tips.map((tip, index) => <li key={index} className="text-sm font-body text-[#bb6f58]">
-              • {tip}
-            </li>)}
-        </ul>
+        <div className="space-y-2 text-center">
+          {tips.map((tip, index) => <p key={index} className="text-sm font-body text-[#bb6f58]">
+              {tip}
+            </p>)}
+        </div>
       </div>
 
       <div className="space-y-6">
