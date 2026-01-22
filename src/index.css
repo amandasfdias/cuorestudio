@@ -38,10 +38,11 @@
     --warm-beige: 35 35% 88%;
     --warm-beige-dark: 35 30% 78%;
     --cream: 40 30% 96%;
-    --terracotta: 30 12% 32%;
+    --terracotta: 14 44% 54%;
     
     --font-display: 'Amatic SC', cursive;
     --font-body: 'Inter', system-ui, sans-serif;
+    --font-handwritten: 'Mansalva', cursive;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 0 0% 8%;
@@ -85,7 +86,7 @@
     --warm-beige: 35 25% 22%;
     --warm-beige-dark: 35 20% 30%;
     --cream: 35 15% 12%;
-    --terracotta: 30 12% 42%;
+    --terracotta: 14 44% 64%;
   }
 }
 
@@ -110,5 +111,9 @@
   
   .font-body {
     font-family: var(--font-body);
+  }
+  
+  .font-handwritten {
+    font-family: var(--font-handwritten);
   }
 }
