@@ -278,7 +278,7 @@ const RecipeDetail = () => {
               {instructionsList.map((instruction, index) => (
                 <div key={index} className="flex gap-4 bg-secondary rounded-lg p-4">
                   <div className="w-8 h-8 rounded-full bg-terracotta flex items-center justify-center flex-shrink-0">
-                    <span className="font-display text-sm font-bold text-white">
+                    <span className="font-handwritten text-sm text-white">
                       {index + 1}
                     </span>
                   </div>
