@@ -38,6 +38,7 @@
     --warm-beige: 35 35% 88%;
     --warm-beige-dark: 35 30% 78%;
     --cream: 40 30% 96%;
+    --terracotta: 30 12% 32%;
     
     --font-display: 'Amatic SC', cursive;
     --font-body: 'Inter', system-ui, sans-serif;
@@ -84,6 +85,7 @@
     --warm-beige: 35 25% 22%;
     --warm-beige-dark: 35 20% 30%;
     --cream: 35 15% 12%;
+    --terracotta: 30 12% 42%;
   }
 }
 

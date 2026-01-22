@@ -56,6 +56,7 @@ export default {
           "beige-dark": "hsl(var(--warm-beige-dark))",
         },
         cream: "hsl(var(--cream))",
+        terracotta: "hsl(var(--terracotta))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
