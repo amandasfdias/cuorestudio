@@ -157,23 +157,22 @@ const RecipeDetail = () => {
             <button
               onClick={() => fileInputRef.current?.click()}
               disabled={uploading}
-              className="absolute bottom-4 right-4 px-3 py-2 rounded-full bg-background/90 backdrop-blur flex items-center gap-2 hover:bg-background transition-colors shadow-md"
+              className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-background/80 backdrop-blur flex items-center justify-center hover:bg-background transition-colors"
             >
-              <Camera className="w-4 h-4" />
-              <span className="font-body text-xs">Trocar foto</span>
+              <Camera className="w-5 h-5" />
             </button>
           </>
         ) : (
           <button
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
-            className="w-full h-full flex flex-col items-center justify-center gap-3 text-muted-foreground hover:text-foreground transition-colors"
+            className="w-full h-full flex flex-col items-center justify-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
           >
-            <div className="w-16 h-16 rounded-full bg-background flex items-center justify-center shadow-md">
-              <Camera className="w-7 h-7" />
+            <div className="w-14 h-14 rounded-full bg-background flex items-center justify-center">
+              <Camera className="w-6 h-6" />
             </div>
             <span className="font-body text-sm">
-              {uploading ? "Enviando..." : "Toque para adicionar foto"}
+              {uploading ? "Enviando..." : "Adicionar foto"}
             </span>
           </button>
         )}
