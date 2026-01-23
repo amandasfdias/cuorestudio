@@ -1,9 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { User, Settings, Heart, LogOut } from "lucide-react";
+import { Settings, Heart, LogOut, Pencil } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProfile } from "@/hooks/useProfile";
 import { useRecipes, useFavoriteRecipes } from "@/hooks/useRecipes";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import EditProfileModal from "@/components/account/EditProfileModal";
 import logo from "@/assets/logo.png";
 
 const Account = () => {
@@ -12,6 +14,7 @@ const Account = () => {
   const { data: profile, isLoading: profileLoading } = useProfile();
   const { data: recipes } = useRecipes();
   const { data: favorites } = useFavoriteRecipes();
+  const [editModalOpen, setEditModalOpen] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -24,8 +27,9 @@ const Account = () => {
     navigate("/auth");
   };
 
+  const username = user?.email?.split("@")[0] || "usuario";
+
   const menuItems = [
-    { icon: User, label: "Meu Perfil", action: () => navigate("/profile") },
     { icon: Heart, label: `Favoritas (${favorites?.length || 0})`, action: () => navigate("/favorites") },
     { icon: Settings, label: "Configurações", action: () => {} },
     { icon: LogOut, label: "Sair", action: handleSignOut, destructive: true },
@@ -47,22 +51,41 @@ const Account = () => {
         Minha Conta
       </h1>
 
-      <div className="flex flex-col items-center mb-8">
-        <div className="w-24 h-24 rounded-full bg-secondary flex items-center justify-center mb-4 overflow-hidden">
-          {profile?.avatar_url ? (
-            <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
-          ) : (
-            <img src={logo} alt="Cuore" className="w-16 h-auto" />
-          )}
+      {/* Profile Header */}
+      <div className="flex items-start gap-4 mb-8">
+        <div className="relative">
+          <Avatar className="w-20 h-20">
+            {profile?.avatar_url ? (
+              <AvatarImage src={profile.avatar_url} alt="Avatar" />
+            ) : (
+              <AvatarFallback className="bg-secondary">
+                <img src={logo} alt="Cuore" className="w-10 h-auto" />
+              </AvatarFallback>
+            )}
+          </Avatar>
         </div>
-        <h2 className="font-display text-2xl text-foreground">
-          {profile?.display_name || user?.email?.split("@")[0] || "Chef Cuore"}
-        </h2>
-        <p className="text-muted-foreground font-body text-sm">
-          Suas receitas: {recipes?.length || 0}
-        </p>
+
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <h2 className="font-display text-2xl text-foreground">
+              {profile?.display_name || username}
+            </h2>
+            <button
+              onClick={() => setEditModalOpen(true)}
+              className="p-1.5 rounded-full hover:bg-secondary transition-colors"
+              aria-label="Editar perfil"
+            >
+              <Pencil className="w-4 h-4 text-muted-foreground" />
+            </button>
+          </div>
+          <p className="text-muted-foreground font-body text-sm">@{username}</p>
+          <p className="text-muted-foreground font-body text-xs mt-1">
+            {recipes?.length || 0} receitas
+          </p>
+        </div>
       </div>
 
+      {/* Menu Items */}
       <div className="bg-secondary rounded-lg overflow-hidden">
         {menuItems.map((item, index) => {
           const Icon = item.icon;
@@ -90,6 +113,13 @@ const Account = () => {
           );
         })}
       </div>
+
+      <EditProfileModal
+        open={editModalOpen}
+        onOpenChange={setEditModalOpen}
+        profile={profile}
+        userEmail={user?.email}
+      />
     </div>
   );
 };
