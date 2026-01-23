@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link2, Instagram, Facebook, Globe } from "lucide-react";
+import { Link2, Instagram, Facebook, Globe, Loader2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -9,6 +9,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+import { recipesApi } from "@/lib/api/recipes";
+import { useCreateRecipe } from "@/hooks/useRecipes";
 
 interface AddRecipeUrlModalProps {
   open: boolean;
@@ -18,6 +21,8 @@ interface AddRecipeUrlModalProps {
 const AddRecipeUrlModal = ({ open, onOpenChange }: AddRecipeUrlModalProps) => {
   const [url, setUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const createRecipe = useCreateRecipe();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,20 +32,53 @@ const AddRecipeUrlModal = ({ open, onOpenChange }: AddRecipeUrlModalProps) => {
     }
 
     setIsLoading(true);
-    // TODO: Implement URL scraping functionality
-    setTimeout(() => {
-      toast.success("Funcionalidade em breve!");
-      setIsLoading(false);
+    
+    try {
+      const response = await recipesApi.scrapeFromUrl(url);
+
+      if (!response.success || !response.data) {
+        toast.error(response.error || "Não foi possível importar a receita");
+        return;
+      }
+
+      const recipeData = response.data;
+      
+      // Create the recipe in the database
+      const newRecipe = await createRecipe.mutateAsync({
+        title: recipeData.title,
+        ingredients: recipeData.ingredients,
+        instructions: recipeData.instructions,
+        prep_time: recipeData.prep_time,
+        cook_time: recipeData.cook_time,
+        servings: recipeData.servings,
+        category: recipeData.category,
+        source_url: recipeData.source_url,
+        image_url: recipeData.image_url,
+      });
+
+      toast.success("Receita importada com sucesso!");
       setUrl("");
       onOpenChange(false);
-    }, 1000);
+      
+      // Navigate to the new recipe
+      if (newRecipe?.id) {
+        navigate(`/recipe/${newRecipe.id}`);
+      } else {
+        navigate("/recipes");
+      }
+    } catch (error) {
+      console.error("Error importing recipe:", error);
+      toast.error("Erro ao importar receita. Tente novamente.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const platforms = [
     { icon: Instagram, name: "Instagram", color: "text-pink-500" },
     { icon: Facebook, name: "Facebook", color: "text-blue-600" },
     { icon: Globe, name: "TikTok", color: "text-foreground" },
-    { icon: Globe, name: "Sites em geral", color: "text-muted-foreground" },
+    { icon: Globe, name: "Sites", color: "text-muted-foreground" },
   ];
 
   return (
@@ -85,9 +123,17 @@ const AddRecipeUrlModal = ({ open, onOpenChange }: AddRecipeUrlModalProps) => {
             onChange={(e) => setUrl(e.target.value)}
             className="h-12"
             autoFocus
+            disabled={isLoading}
           />
           <Button type="submit" className="w-full h-12" disabled={isLoading}>
-            {isLoading ? "Importando..." : "Importar Receita"}
+            {isLoading ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Importando...
+              </>
+            ) : (
+              "Importar Receita"
+            )}
           </Button>
         </form>
       </DialogContent>

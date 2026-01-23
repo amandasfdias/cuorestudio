@@ -93,13 +93,22 @@ export const useCreateRecipe = () => {
   const { user } = useAuth();
 
   return useMutation({
-    mutationFn: async (recipe: Omit<RecipeInsert, "user_id">) => {
+    mutationFn: async (recipe: Partial<Omit<RecipeInsert, "user_id">> & { title: string }) => {
       if (!user) throw new Error("User not authenticated");
 
       const { data, error } = await supabase
         .from("recipes")
         .insert({
-          ...recipe,
+          title: recipe.title,
+          ingredients: recipe.ingredients ?? null,
+          instructions: recipe.instructions ?? null,
+          image_url: recipe.image_url ?? null,
+          source_url: recipe.source_url ?? null,
+          category: recipe.category ?? null,
+          servings: recipe.servings ?? null,
+          prep_time: recipe.prep_time ?? null,
+          cook_time: recipe.cook_time ?? null,
+          is_favorite: recipe.is_favorite ?? false,
           user_id: user.id,
         })
         .select()
@@ -110,7 +119,6 @@ export const useCreateRecipe = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["recipes"] });
-      toast.success("Receita salva com sucesso!");
     },
     onError: (error) => {
       toast.error("Erro ao salvar receita: " + error.message);
