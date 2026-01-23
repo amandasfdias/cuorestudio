@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link2, PenLine, Camera } from "lucide-react";
 import {
   Dialog,
@@ -6,6 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useNavigate } from "react-router-dom";
+import AddRecipeUrlModal from "./AddRecipeUrlModal";
 
 interface AddRecipeModalProps {
   open: boolean;
@@ -14,6 +16,7 @@ interface AddRecipeModalProps {
 
 const AddRecipeModal = ({ open, onOpenChange }: AddRecipeModalProps) => {
   const navigate = useNavigate();
+  const [urlModalOpen, setUrlModalOpen] = useState(false);
 
   const options = [
     {
@@ -22,7 +25,7 @@ const AddRecipeModal = ({ open, onOpenChange }: AddRecipeModalProps) => {
       description: "Importe uma receita de um site",
       action: () => {
         onOpenChange(false);
-        navigate("/add-recipe/url");
+        setUrlModalOpen(true);
       },
     },
     {
@@ -46,39 +49,43 @@ const AddRecipeModal = ({ open, onOpenChange }: AddRecipeModalProps) => {
   ];
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-sm mx-auto">
-        <DialogHeader>
-          <DialogTitle className="font-display text-3xl text-center">
-            Nova Receita
-          </DialogTitle>
-        </DialogHeader>
-        <div className="grid gap-3 py-4">
-          {options.map((option) => {
-            const Icon = option.icon;
-            return (
-              <button
-                key={option.title}
-                onClick={option.action}
-                className="flex items-center gap-4 p-4 rounded-lg bg-secondary hover:bg-accent transition-colors text-left group"
-              >
-                <div className="w-12 h-12 rounded-full bg-background flex items-center justify-center group-hover:bg-warm-beige transition-colors">
-                  <Icon className="w-5 h-5 text-foreground" />
-                </div>
-                <div>
-                  <h3 className="font-display text-xl text-foreground">
-                    {option.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground font-body">
-                    {option.description}
-                  </p>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </DialogContent>
-    </Dialog>
+    <>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="max-w-sm mx-auto">
+          <DialogHeader>
+            <DialogTitle className="font-display text-3xl text-center">
+              Nova Receita
+            </DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-3 py-4">
+            {options.map((option) => {
+              const Icon = option.icon;
+              return (
+                <button
+                  key={option.title}
+                  onClick={option.action}
+                  className="flex items-center gap-4 p-4 rounded-lg bg-secondary hover:bg-accent transition-colors text-left group"
+                >
+                  <div className="w-12 h-12 rounded-full bg-background flex items-center justify-center group-hover:bg-warm-beige transition-colors">
+                    <Icon className="w-5 h-5 text-foreground" />
+                  </div>
+                  <div>
+                    <h3 className="font-display text-xl text-foreground">
+                      {option.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground font-body">
+                      {option.description}
+                    </p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <AddRecipeUrlModal open={urlModalOpen} onOpenChange={setUrlModalOpen} />
+    </>
   );
 };
 
