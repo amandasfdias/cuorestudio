@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Camera } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useUpdateProfile, Profile } from "@/hooks/useProfile";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -18,10 +19,26 @@ interface EditProfileModalProps {
 }
 
 const EditProfileModal = ({ open, onOpenChange, profile, userEmail }: EditProfileModalProps) => {
-  const [displayName, setDisplayName] = useState(profile?.display_name || "");
-  const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url || "");
+  const [displayName, setDisplayName] = useState("");
+  const [username, setUsername] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState("");
+  const [birthDate, setBirthDate] = useState("");
+  const [gender, setGender] = useState("");
+  const [location, setLocation] = useState("");
   const [uploading, setUploading] = useState(false);
   const updateProfile = useUpdateProfile();
+
+  // Sync state when profile changes or modal opens
+  useEffect(() => {
+    if (open && profile) {
+      setDisplayName(profile.display_name || "");
+      setUsername(profile.username || "");
+      setAvatarUrl(profile.avatar_url || "");
+      setBirthDate(profile.birth_date || "");
+      setGender(profile.gender || "");
+      setLocation(profile.location || "");
+    }
+  }, [open, profile]);
 
   const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -66,20 +83,25 @@ const EditProfileModal = ({ open, onOpenChange, profile, userEmail }: EditProfil
     await updateProfile.mutateAsync({
       display_name: displayName || null,
       avatar_url: avatarUrl || null,
+      username: username || null,
+      birth_date: birthDate || null,
+      gender: gender || null,
+      location: location || null,
     });
     onOpenChange(false);
   };
 
-  const username = userEmail?.split("@")[0] || "usuario";
+  const defaultUsername = userEmail?.split("@")[0] || "usuario";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="font-display text-2xl">Editar Perfil</DialogTitle>
+          <DialogTitle className="font-display text-2xl">Editar Conta</DialogTitle>
         </DialogHeader>
 
         <div className="flex flex-col items-center gap-6 py-4">
+          {/* Avatar Upload */}
           <div className="relative">
             <Avatar className="w-24 h-24">
               {avatarUrl ? (
@@ -106,9 +128,10 @@ const EditProfileModal = ({ open, onOpenChange, profile, userEmail }: EditProfil
             </label>
           </div>
 
+          {/* Form Fields */}
           <div className="w-full space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="display-name">Nome de exibição</Label>
+              <Label htmlFor="display-name">Nome</Label>
               <Input
                 id="display-name"
                 value={displayName}
@@ -118,8 +141,52 @@ const EditProfileModal = ({ open, onOpenChange, profile, userEmail }: EditProfil
             </div>
 
             <div className="space-y-2">
-              <Label className="text-muted-foreground">Usuário</Label>
-              <p className="text-sm text-muted-foreground">@{username}</p>
+              <Label htmlFor="username">Nick de usuário</Label>
+              <div className="flex items-center">
+                <span className="text-muted-foreground mr-1">@</span>
+                <Input
+                  id="username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
+                  placeholder={defaultUsername}
+                  className="flex-1"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="birth-date">Data de nascimento</Label>
+              <Input
+                id="birth-date"
+                type="date"
+                value={birthDate}
+                onChange={(e) => setBirthDate(e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="gender">Sexo</Label>
+              <Select value={gender} onValueChange={setGender}>
+                <SelectTrigger id="gender">
+                  <SelectValue placeholder="Selecione" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="masculino">Masculino</SelectItem>
+                  <SelectItem value="feminino">Feminino</SelectItem>
+                  <SelectItem value="outro">Outro</SelectItem>
+                  <SelectItem value="prefiro_nao_dizer">Prefiro não dizer</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="location">Localidade</Label>
+              <Input
+                id="location"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                placeholder="Cidade, Estado"
+              />
             </div>
           </div>
         </div>

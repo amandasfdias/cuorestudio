@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Settings, Heart, LogOut, Pencil, Camera } from "lucide-react";
+import { Settings, Heart, LogOut, Camera } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProfile } from "@/hooks/useProfile";
 import { useFavoriteRecipes } from "@/hooks/useRecipes";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import EditProfileModal from "@/components/account/EditProfileModal";
 import logo from "@/assets/logo.png";
 
@@ -26,7 +27,7 @@ const Account = () => {
     navigate("/auth");
   };
 
-  const username = user?.email?.split("@")[0] || "usuario";
+  const displayUsername = profile?.username || user?.email?.split("@")[0] || "usuario";
 
   const menuItems = [
     { icon: Heart, label: `Favoritas (${favorites?.length || 0})`, action: () => navigate("/favorites") },
@@ -72,21 +73,21 @@ const Account = () => {
         </button>
 
         <div className="flex-1">
-          <div className="flex items-center gap-2">
-            <h2 className="font-display text-2xl text-foreground">
-              {profile?.display_name || username}
-            </h2>
-            <button
-              onClick={() => setEditModalOpen(true)}
-              className="p-1.5 rounded-full hover:bg-secondary transition-colors"
-              aria-label="Editar perfil"
-            >
-              <Pencil className="w-4 h-4 text-muted-foreground" />
-            </button>
-          </div>
-          <p className="text-muted-foreground font-body text-sm">@{username}</p>
+          <h2 className="font-display text-2xl text-foreground">
+            {profile?.display_name || displayUsername}
+          </h2>
+          <p className="text-muted-foreground font-body text-sm">@{displayUsername}</p>
         </div>
       </div>
+
+      {/* Edit Account Button */}
+      <Button
+        variant="outline"
+        className="w-full mb-6"
+        onClick={() => setEditModalOpen(true)}
+      >
+        Editar Conta
+      </Button>
 
       {/* Menu Items */}
       <div className="bg-secondary rounded-lg overflow-hidden">
