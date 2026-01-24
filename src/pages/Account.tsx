@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Settings, Heart, LogOut, Pencil } from "lucide-react";
+import { Settings, Heart, LogOut, Pencil, Camera } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProfile } from "@/hooks/useProfile";
-import { useRecipes, useFavoriteRecipes } from "@/hooks/useRecipes";
+import { useFavoriteRecipes } from "@/hooks/useRecipes";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import EditProfileModal from "@/components/account/EditProfileModal";
 import logo from "@/assets/logo.png";
@@ -12,7 +12,6 @@ const Account = () => {
   const { user, loading: authLoading, signOut } = useAuth();
   const navigate = useNavigate();
   const { data: profile, isLoading: profileLoading } = useProfile();
-  const { data: recipes } = useRecipes();
   const { data: favorites } = useFavoriteRecipes();
   const [editModalOpen, setEditModalOpen] = useState(false);
 
@@ -53,7 +52,11 @@ const Account = () => {
 
       {/* Profile Header */}
       <div className="flex items-start gap-4 mb-8">
-        <div className="relative">
+        <button
+          onClick={() => setEditModalOpen(true)}
+          className="relative group"
+          aria-label="Alterar foto de perfil"
+        >
           <Avatar className="w-20 h-20">
             {profile?.avatar_url ? (
               <AvatarImage src={profile.avatar_url} alt="Avatar" />
@@ -63,7 +66,10 @@ const Account = () => {
               </AvatarFallback>
             )}
           </Avatar>
-        </div>
+          <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <Camera className="w-6 h-6 text-white" />
+          </div>
+        </button>
 
         <div className="flex-1">
           <div className="flex items-center gap-2">
@@ -79,9 +85,6 @@ const Account = () => {
             </button>
           </div>
           <p className="text-muted-foreground font-body text-sm">@{username}</p>
-          <p className="text-muted-foreground font-body text-xs mt-1">
-            {recipes?.length || 0} receitas
-          </p>
         </div>
       </div>
 
