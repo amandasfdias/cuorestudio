@@ -22,7 +22,9 @@ export type Database = {
           display_name: string | null
           gender: string | null
           id: string
+          language: string | null
           location: string | null
+          measurement_system: string | null
           theme_color: string | null
           theme_mode: string | null
           updated_at: string
@@ -36,7 +38,9 @@ export type Database = {
           display_name?: string | null
           gender?: string | null
           id?: string
+          language?: string | null
           location?: string | null
+          measurement_system?: string | null
           theme_color?: string | null
           theme_mode?: string | null
           updated_at?: string
@@ -50,7 +54,9 @@ export type Database = {
           display_name?: string | null
           gender?: string | null
           id?: string
+          language?: string | null
           location?: string | null
+          measurement_system?: string | null
           theme_color?: string | null
           theme_mode?: string | null
           updated_at?: string

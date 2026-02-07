@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Heart, LogOut, Camera, Palette } from "lucide-react";
+import { Heart, LogOut, Camera, Palette, Settings } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProfile } from "@/hooks/useProfile";
 import { useFavoriteRecipes } from "@/hooks/useRecipes";
@@ -8,6 +8,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import EditProfileModal from "@/components/account/EditProfileModal";
 import AppearanceModal from "@/components/account/AppearanceModal";
+import SettingsModal from "@/components/account/SettingsModal";
 import logo from "@/assets/logo.png";
 
 const Account = () => {
@@ -17,6 +18,7 @@ const Account = () => {
   const { data: favorites } = useFavoriteRecipes();
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [appearanceModalOpen, setAppearanceModalOpen] = useState(false);
+  const [settingsModalOpen, setSettingsModalOpen] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -34,6 +36,7 @@ const Account = () => {
   const menuItems = [
     { icon: Heart, label: `Favoritas (${favorites?.length || 0})`, action: () => navigate("/favorites") },
     { icon: Palette, label: "Aparência", action: () => setAppearanceModalOpen(true) },
+    { icon: Settings, label: "Configurações", action: () => setSettingsModalOpen(true) },
     { icon: LogOut, label: "Sair", action: handleSignOut, destructive: true },
   ];
 
@@ -130,6 +133,11 @@ const Account = () => {
       <AppearanceModal
         open={appearanceModalOpen}
         onOpenChange={setAppearanceModalOpen}
+      />
+
+      <SettingsModal
+        open={settingsModalOpen}
+        onOpenChange={setSettingsModalOpen}
       />
     </div>
   );
