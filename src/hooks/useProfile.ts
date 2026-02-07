@@ -12,6 +12,8 @@ export interface Profile {
   birth_date: string | null;
   gender: string | null;
   location: string | null;
+  theme_mode: string | null;
+  theme_color: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -49,6 +51,8 @@ export const useUpdateProfile = () => {
       birth_date?: string | null;
       gender?: string | null;
       location?: string | null;
+      theme_mode?: string | null;
+      theme_color?: string | null;
     }) => {
       if (!user) throw new Error("User not authenticated");
 
