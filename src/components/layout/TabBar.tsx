@@ -65,13 +65,13 @@ const TabBar = () => {
               >
                 <Icon
                   className={`w-5 h-5 transition-colors ${
-                    isActive ? "text-foreground" : "text-foreground/60"
+                    isActive ? "text-foreground" : "text-foreground"
                   }`}
                   strokeWidth={isActive ? 2.5 : 2}
                 />
                 <span
                   className={`text-xs font-body transition-colors ${
-                    isActive ? "text-foreground font-medium" : "text-foreground/60"
+                    isActive ? "text-foreground font-medium" : "text-foreground"
                   }`}
                 >
                   {tab.label}
