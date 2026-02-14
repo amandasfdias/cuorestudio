@@ -69,13 +69,6 @@ const TabBar = () => {
                   }`}
                   strokeWidth={isActive ? 2.5 : 2}
                 />
-                <span
-                  className={`text-xs font-body transition-colors ${
-                    isActive ? "text-[hsl(var(--tab-active))] font-medium" : "text-foreground"
-                  }`}
-                >
-                  {tab.label}
-                </span>
               </button>
             );
           })}
