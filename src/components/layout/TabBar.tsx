@@ -37,7 +37,7 @@ const TabBar = () => {
 
   return (
     <>
-      <nav className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-50">
+      <nav className="fixed bottom-0 left-0 right-0 bg-card border-t-0 shadow-[0_-2px_10px_rgba(0,0,0,0.08)] z-50">
         <div className="flex items-center justify-around h-16 max-w-lg mx-auto px-2">
           {tabs.map((tab) => {
             const isActive = !tab.isAction && location.pathname === tab.path;
@@ -65,13 +65,13 @@ const TabBar = () => {
               >
                 <Icon
                   className={`w-5 h-5 transition-colors ${
-                    isActive ? "text-foreground" : "text-muted-foreground"
+                    isActive ? "text-foreground" : "text-foreground/60"
                   }`}
                   strokeWidth={isActive ? 2.5 : 2}
                 />
                 <span
                   className={`text-xs font-body transition-colors ${
-                    isActive ? "text-foreground font-medium" : "text-muted-foreground"
+                    isActive ? "text-foreground font-medium" : "text-foreground/60"
                   }`}
                 >
                   {tab.label}
