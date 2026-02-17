@@ -64,7 +64,7 @@ const AddRecipeModal = ({ open, onOpenChange }: AddRecipeModalProps) => {
                 <button
                   key={option.title}
                   onClick={option.action}
-                  className="flex items-center gap-4 p-4 rounded-lg bg-secondary hover:bg-accent transition-colors text-left group"
+                  className="flex items-center gap-4 p-4 rounded-lg bg-muted hover:bg-accent transition-colors text-left group"
                 >
                   <div className="w-12 h-12 rounded-full bg-background flex items-center justify-center group-hover:bg-warm-beige transition-colors">
                     <Icon className="w-5 h-5 text-foreground" />
