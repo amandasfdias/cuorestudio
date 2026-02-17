@@ -1,4 +1,4 @@
-import { Home, BookOpen, Plus, Scale, User } from "lucide-react";
+import { Home, ClipboardList, Plus, Scale, User } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -17,7 +17,7 @@ const TabBar = () => {
 
   const tabs = [
     { path: "/", icon: Home, label: "Home" },
-    { path: "/recipes", icon: BookOpen, label: "Receitas" },
+    { path: "/recipes", icon: ClipboardList, label: "Receitas" },
     { path: "add", icon: Plus, label: "Adicionar", isAction: true },
     { path: "/conversions", icon: Scale, label: "Medidas" },
     { path: "/account", icon: User, label: "Conta" },
@@ -64,11 +64,16 @@ const TabBar = () => {
                 className="flex flex-col items-center justify-center gap-1 flex-1 py-2 transition-colors"
               >
                 <Icon
-                  className={`w-6 h-6 transition-colors ${
-                    isActive ? "text-[hsl(var(--tab-active))]" : "text-foreground"
+                  className={`w-5 h-5 transition-colors ${
+                    isActive ? "text-[hsl(var(--tab-active))]" : "text-muted-foreground"
                   }`}
                   strokeWidth={1.5}
                 />
+                <span className={`text-[10px] font-body transition-colors ${
+                  isActive ? "text-[hsl(var(--tab-active))]" : "text-muted-foreground"
+                }`}>
+                  {tab.label}
+                </span>
               </button>
             );
           })}
