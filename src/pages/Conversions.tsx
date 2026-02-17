@@ -265,19 +265,19 @@ const Conversions = () => {
       {/* Dicas */}
       <div className="mb-8">
         {tips.map((tip, index) => <div key={index}>
-            <p className="text-base font-body text-[hsl(var(--terracotta))] text-justify leading-relaxed">
+            <p className="text-base font-body text-[hsl(var(--terracotta))] leading-relaxed text-center">
               {tip}
             </p>
-            {index < tips.length - 1 && (
-              <div className="flex justify-center my-4">
+            {index < tips.length - 1 &&
+        <div className="flex justify-center my-4">
                 <span className="text-foreground text-lg">♥</span>
               </div>
-            )}
+        }
           </div>)}
       </div>
 
       <div className="space-y-6">
-        {conversions.map(section => <div key={section.category} className="animate-fade-in">
+        {conversions.map((section) => <div key={section.category} className="animate-fade-in">
             <h2 className="font-display text-2xl text-foreground mb-3">
               {section.category}
             </h2>
