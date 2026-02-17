@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import logo from "@/assets/logo.png";
+import capa from "@/assets/capa.png";
 const Index = () => {
   const {
     user,
@@ -22,7 +23,7 @@ const Index = () => {
   }
   return <div className="flex flex-col items-center justify-center min-h-[calc(100vh-5rem)] px-6">
       <div className="animate-fade-in">
-        <img alt="Cuore Bake & Craft Studio" className="w-64 h-auto object-scale-down" src="/lovable-uploads/91a6aba3-531a-45da-a655-0019ae86492a.png" />
+        <img alt="Cuore Bake & Craft Studio" className="w-64 h-auto object-scale-down" src={capa} />
       </div>
       <p className="mt-8 text-muted-foreground font-body text-sm tracking-wide">
         Suas receitas favoritas em um só lugar
