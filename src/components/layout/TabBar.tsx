@@ -48,7 +48,7 @@ const TabBar = () => {
                 <button
                   key={tab.path}
                   onClick={() => handleTabClick(tab)}
-                  className="flex flex-col items-center justify-center flex-1 -mt-4"
+                  className="flex flex-col items-center justify-center flex-1"
                 >
                   <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center shadow-lg transition-transform active:scale-95">
                     <Icon className="w-6 h-6 text-primary-foreground" strokeWidth={2.5} />
