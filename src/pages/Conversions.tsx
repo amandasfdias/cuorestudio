@@ -258,20 +258,22 @@ const conversions = [{
 const tips = ["Para maior precisão da medição dos ingredientes secos, peneire sempre antes de medir e nunca comprima o ingrediente a ser medido.", "Para conferir a medição dos ingredientes líquidos, deve-se colocar o recipiente em uma superfície plana e verificar o nível na altura dos olhos.", "Para medir ingredientes em forma de gordura sólida, deve-se retirar o ingrediente da geladeira com antecedência para que sejam medidas em temperatura ambiente. Ao ser colocado no recipiente a ser medido, deve-se fazer uma pequena pressão para retirar o ar."];
 const Conversions = () => {
   return <div className="px-6 py-8 pb-24">
-      <div className="flex items-center gap-3 mb-6">
-        <Scale className="w-6 h-6 text-foreground" />
-        <h1 className="font-display text-4xl font-bold text-foreground">
-          Conversão de medidas
-        </h1>
-      </div>
+      <h1 className="font-display text-4xl font-bold text-foreground text-center mb-8">
+        Conversão de medidas
+      </h1>
 
       {/* Dicas */}
-      <div className="rounded-lg p-4 mb-6 bg-primary-foreground text-[#bb6f58]">
-        <div className="space-y-2 text-center">
-          {tips.map((tip, index) => <p key={index} className="text-sm font-body text-[#bb6f58]">
+      <div className="mb-8">
+        {tips.map((tip, index) => <div key={index}>
+            <p className="text-base font-body text-[hsl(var(--terracotta))] text-justify leading-relaxed">
               {tip}
-            </p>)}
-        </div>
+            </p>
+            {index < tips.length - 1 && (
+              <div className="flex justify-center my-4">
+                <span className="text-foreground text-lg">♥</span>
+              </div>
+            )}
+          </div>)}
       </div>
 
       <div className="space-y-6">
