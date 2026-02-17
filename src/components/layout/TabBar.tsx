@@ -67,7 +67,7 @@ const TabBar = () => {
                   className={`w-6 h-6 transition-colors ${
                     isActive ? "text-[hsl(var(--tab-active))]" : "text-foreground"
                   }`}
-                  strokeWidth={isActive ? 2.5 : 2}
+                  strokeWidth={1.5}
                 />
               </button>
             );
