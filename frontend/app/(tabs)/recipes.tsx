@@ -18,7 +18,7 @@ import Constants from 'expo-constants';
 const COLORS = {
   primary: '#000000',
   secondary: '#D4A574',
-  background: '#FFFFFF',
+  background: '#f7f7f7',
   lightGray: '#F5F5F5',
   gray: '#999999',
 };
