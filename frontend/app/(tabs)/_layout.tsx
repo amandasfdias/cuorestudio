@@ -6,7 +6,7 @@ import { View, StyleSheet, Platform } from 'react-native';
 const COLORS = {
   primary: '#000000',
   secondary: '#D4A574',
-  background: '#FFFFFF',
+  background: '#f7f7f7',
   inactive: '#999999',
 };
 
