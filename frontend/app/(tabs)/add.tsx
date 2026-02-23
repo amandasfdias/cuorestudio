@@ -3,15 +3,13 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
   TextInput,
   Modal,
   Alert,
   ActivityIndicator,
-  ScrollView,
-  Platform,
   KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -25,17 +23,18 @@ const COLORS = {
   background: '#f7f7f7',
   lightGray: '#F5F5F5',
   gray: '#999999',
+  cream: '#F5EBE0',
+  white: '#FFFFFF',
 };
 
 const API_URL = Constants.expoConfig?.extra?.EXPO_PUBLIC_BACKEND_URL || 
   process.env.EXPO_PUBLIC_BACKEND_URL || 
   'https://taste-notes.preview.emergentagent.com';
 
-type AddOption = 'url' | 'manual' | 'photo' | null;
-
 export default function AddScreen() {
   const router = useRouter();
-  const [selectedOption, setSelectedOption] = useState<AddOption>(null);
+  const [showModal, setShowModal] = useState(true);
+  const [showUrlInput, setShowUrlInput] = useState(false);
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -52,7 +51,8 @@ export default function AddScreen() {
       });
       Alert.alert('Sucesso', 'Receita importada com sucesso!');
       setUrl('');
-      setSelectedOption(null);
+      setShowUrlInput(false);
+      setShowModal(false);
       router.push(`/recipe/${response.data.id}`);
     } catch (error: any) {
       console.error('Error importing recipe:', error);
@@ -66,42 +66,6 @@ export default function AddScreen() {
   };
 
   const handlePhotoSelect = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    
-    if (!permissionResult.granted) {
-      Alert.alert('Permissão necessária', 'Precisamos de acesso às suas fotos');
-      return;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
-      allowsEditing: true,
-      quality: 0.8,
-      base64: true,
-    });
-
-    if (!result.canceled && result.assets[0].base64) {
-      setLoading(true);
-      try {
-        const response = await axios.post(`${API_URL}/api/recipes/from-image`, {
-          image_base64: result.assets[0].base64,
-        });
-        Alert.alert('Sucesso', 'Receita digitalizada com sucesso!');
-        setSelectedOption(null);
-        router.push(`/recipe/${response.data.id}`);
-      } catch (error: any) {
-        console.error('Error processing image:', error);
-        Alert.alert(
-          'Erro',
-          error.response?.data?.detail || 'Não foi possível processar a imagem'
-        );
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
-
-  const handleTakePhoto = async () => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
     
     if (!permissionResult.granted) {
@@ -117,12 +81,12 @@ export default function AddScreen() {
 
     if (!result.canceled && result.assets[0].base64) {
       setLoading(true);
+      setShowModal(false);
       try {
         const response = await axios.post(`${API_URL}/api/recipes/from-image`, {
           image_base64: result.assets[0].base64,
         });
         Alert.alert('Sucesso', 'Receita digitalizada com sucesso!');
-        setSelectedOption(null);
         router.push(`/recipe/${response.data.id}`);
       } catch (error: any) {
         console.error('Error processing image:', error);
@@ -130,6 +94,7 @@ export default function AddScreen() {
           'Erro',
           error.response?.data?.detail || 'Não foi possível processar a imagem'
         );
+        setShowModal(true);
       } finally {
         setLoading(false);
       }
@@ -137,88 +102,108 @@ export default function AddScreen() {
   };
 
   const handleManualAdd = () => {
-    setSelectedOption(null);
+    setShowModal(false);
     router.push('/add-recipe');
   };
 
-  const renderOptionButton = (
-    icon: keyof typeof Ionicons.glyphMap,
-    title: string,
-    subtitle: string,
-    onPress: () => void
-  ) => (
-    <TouchableOpacity style={styles.optionButton} onPress={onPress} activeOpacity={0.7}>
-      <View style={styles.optionIconContainer}>
-        <Ionicons name={icon} size={28} color={COLORS.primary} />
-      </View>
-      <View style={styles.optionTextContainer}>
-        <Text style={styles.optionTitle}>{title}</Text>
-        <Text style={styles.optionSubtitle}>{subtitle}</Text>
-      </View>
-      <Ionicons name="chevron-forward" size={20} color={COLORS.gray} />
-    </TouchableOpacity>
-  );
+  const handleClose = () => {
+    setShowModal(false);
+    setShowUrlInput(false);
+    router.back();
+  };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Adicionar Receita</Text>
-      </View>
-
-      {loading ? (
-        <View style={styles.loadingContainer}>
+    <View style={styles.container}>
+      {loading && (
+        <View style={styles.loadingOverlay}>
           <ActivityIndicator size="large" color={COLORS.primary} />
           <Text style={styles.loadingText}>Processando...</Text>
         </View>
-      ) : (
-        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          <Text style={styles.sectionTitle}>Como deseja adicionar?</Text>
-
-          {renderOptionButton(
-            'link-outline',
-            'Colar URL',
-            'Importar receita de um site',
-            () => setSelectedOption('url')
-          )}
-
-          {renderOptionButton(
-            'create-outline',
-            'Adicionar Manualmente',
-            'Criar receita do zero',
-            handleManualAdd
-          )}
-
-          {renderOptionButton(
-            'camera-outline',
-            'Tirar Foto',
-            'Fotografar uma receita',
-            handleTakePhoto
-          )}
-
-          {renderOptionButton(
-            'image-outline',
-            'Escolher da Galeria',
-            'Digitalizar foto de receita',
-            handlePhotoSelect
-          )}
-        </ScrollView>
       )}
+
+      {/* Main Modal */}
+      <Modal
+        visible={showModal && !loading}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={handleClose}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            {/* Close Button */}
+            <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
+              <Ionicons name="close" size={24} color={COLORS.primary} />
+            </TouchableOpacity>
+
+            {/* Title */}
+            <Text style={styles.modalTitle}>Nova Receita</Text>
+
+            {/* Options */}
+            <View style={styles.optionsContainer}>
+              {/* Colar URL */}
+              <TouchableOpacity 
+                style={[styles.optionCard, styles.optionCardCream]} 
+                onPress={() => setShowUrlInput(true)}
+                activeOpacity={0.7}
+              >
+                <View style={[styles.iconCircle, styles.iconCircleCream]}>
+                  <Ionicons name="link-outline" size={24} color={COLORS.primary} />
+                </View>
+                <View style={styles.optionTextContainer}>
+                  <Text style={styles.optionTitle}>Colar URL</Text>
+                  <Text style={styles.optionSubtitle}>Importe uma receita de um site</Text>
+                </View>
+              </TouchableOpacity>
+
+              {/* Adicionar Manualmente */}
+              <TouchableOpacity 
+                style={styles.optionCard} 
+                onPress={handleManualAdd}
+                activeOpacity={0.7}
+              >
+                <View style={styles.iconCircle}>
+                  <Ionicons name="pencil-outline" size={24} color={COLORS.primary} />
+                </View>
+                <View style={styles.optionTextContainer}>
+                  <Text style={styles.optionTitle}>Adicionar Manualmente</Text>
+                  <Text style={styles.optionSubtitle}>Escreva sua própria receita</Text>
+                </View>
+              </TouchableOpacity>
+
+              {/* Digitalizar Foto */}
+              <TouchableOpacity 
+                style={styles.optionCard} 
+                onPress={handlePhotoSelect}
+                activeOpacity={0.7}
+              >
+                <View style={styles.iconCircle}>
+                  <Ionicons name="camera-outline" size={24} color={COLORS.primary} />
+                </View>
+                <View style={styles.optionTextContainer}>
+                  <Text style={styles.optionTitle}>Digitalizar Foto</Text>
+                  <Text style={styles.optionSubtitle}>Escaneie uma receita com a câmera</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       {/* URL Input Modal */}
       <Modal
-        visible={selectedOption === 'url'}
+        visible={showUrlInput}
         animationType="slide"
         transparent={true}
-        onRequestClose={() => setSelectedOption(null)}
+        onRequestClose={() => setShowUrlInput(false)}
       >
         <KeyboardAvoidingView 
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.modalOverlay}
+          style={styles.urlModalOverlay}
         >
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Colar URL da Receita</Text>
-              <TouchableOpacity onPress={() => setSelectedOption(null)}>
+          <View style={styles.urlModalContent}>
+            <View style={styles.urlModalHeader}>
+              <Text style={styles.urlModalTitle}>Colar URL da Receita</Text>
+              <TouchableOpacity onPress={() => setShowUrlInput(false)}>
                 <Ionicons name="close" size={24} color={COLORS.primary} />
               </TouchableOpacity>
             </View>
@@ -240,7 +225,7 @@ export default function AddScreen() {
               disabled={!url.trim() || loading}
             >
               {loading ? (
-                <ActivityIndicator color={COLORS.background} />
+                <ActivityIndicator color={COLORS.white} />
               ) : (
                 <Text style={styles.submitButtonText}>Importar Receita</Text>
               )}
@@ -248,7 +233,7 @@ export default function AddScreen() {
           </View>
         </KeyboardAvoidingView>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -257,43 +242,73 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.background,
   },
-  header: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 10,
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 100,
   },
-  headerTitle: {
-    fontFamily: 'AmaticSC-Bold',
-    fontSize: 40,
-    color: COLORS.primary,
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: 20,
-  },
-  sectionTitle: {
+  loadingText: {
+    marginTop: 16,
     fontSize: 16,
     color: COLORS.gray,
-    marginBottom: 20,
-    marginTop: 10,
   },
-  optionButton: {
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalContent: {
+    backgroundColor: COLORS.white,
+    borderRadius: 24,
+    padding: 24,
+    width: '100%',
+    maxWidth: 340,
+    position: 'relative',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+    zIndex: 10,
+    padding: 4,
+  },
+  modalTitle: {
+    fontFamily: 'AmaticSC-Bold',
+    fontSize: 36,
+    color: COLORS.primary,
+    textAlign: 'center',
+    marginBottom: 24,
+    marginTop: 8,
+  },
+  optionsContainer: {
+    gap: 12,
+  },
+  optionCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.background,
-    borderRadius: 12,
+    backgroundColor: COLORS.lightGray,
+    borderRadius: 16,
     padding: 16,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: '#E5E5E5',
   },
-  optionIconContainer: {
+  optionCardCream: {
+    backgroundColor: COLORS.cream,
+  },
+  iconCircle: {
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: COLORS.lightGray,
+    backgroundColor: COLORS.white,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  iconCircleCream: {
+    backgroundColor: COLORS.cream,
+    borderWidth: 2,
+    borderColor: 'rgba(0,0,0,0.05)',
   },
   optionTextContainer: {
     flex: 1,
@@ -305,39 +320,29 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
   },
   optionSubtitle: {
-    fontSize: 14,
+    fontSize: 13,
     color: COLORS.gray,
     marginTop: 2,
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loadingText: {
-    marginTop: 16,
-    fontSize: 16,
-    color: COLORS.gray,
-  },
-  modalOverlay: {
+  urlModalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'flex-end',
   },
-  modalContent: {
-    backgroundColor: COLORS.background,
+  urlModalContent: {
+    backgroundColor: COLORS.white,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     padding: 20,
     paddingBottom: Platform.OS === 'ios' ? 40 : 20,
   },
-  modalHeader: {
+  urlModalHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 20,
   },
-  modalTitle: {
+  urlModalTitle: {
     fontFamily: 'AmaticSC-Bold',
     fontSize: 28,
     color: COLORS.primary,
@@ -360,7 +365,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.gray,
   },
   submitButtonText: {
-    color: COLORS.background,
+    color: COLORS.white,
     fontSize: 16,
     fontWeight: '600',
   },
