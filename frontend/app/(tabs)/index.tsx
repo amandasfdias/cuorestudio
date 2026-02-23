@@ -4,7 +4,7 @@ import { View, StyleSheet, SafeAreaView, Image } from 'react-native';
 const COLORS = {
   primary: '#000000',
   secondary: '#D4A574',
-  background: '#FFFFFF',
+  background: '#f7f7f7',
 };
 
 const LOGO_URL = 'https://customer-assets.emergentagent.com/job_taste-notes/artifacts/snjgfpit_Logo%20Principal.png';
