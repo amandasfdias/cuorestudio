@@ -1,47 +1,6 @@
 import { Scale, CookingPot, Calculator } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 const conversions = [{
-  category: "Equivalências",
-  items: [{
-    from: "1 copo tipo 'requeijão'",
-    to: "250 ml"
-  }, {
-    from: "1 copo americano",
-    to: "200 ml"
-  }, {
-    from: "1 cálice de vinho",
-    to: "100 ml"
-  }, {
-    from: "1 xícara",
-    to: "16 colheres (sopa) / 240 ml"
-  }, {
-    from: "3/4 xícara",
-    to: "12 colheres (sopa) / 180 ml"
-  }, {
-    from: "2/3 xícara",
-    to: "10 colheres (sopa) + 2 colheres (chá) / 160 ml"
-  }, {
-    from: "1/2 xícara",
-    to: "8 colheres (sopa) / 120 ml"
-  }, {
-    from: "1/3 xícara",
-    to: "5 colheres (sopa) + 1 colher (chá) / 80 ml"
-  }, {
-    from: "1/4 xícara",
-    to: "4 colheres (sopa) / 60 ml"
-  }, {
-    from: "1 colher (sopa)",
-    to: "15 ml"
-  }, {
-    from: "1 colher (sobremesa)",
-    to: "7,5 ml"
-  }, {
-    from: "1 colher (chá)",
-    to: "5 ml"
-  }, {
-    from: "1 colher (café)",
-    to: "2,5 ml"
-  }]
-}, {
   category: "Líquido (Água, Suco, Leite, Buttermilk, Café, Óleo)",
   items: [{
     from: "1 xícara",
@@ -257,6 +216,7 @@ const conversions = [{
 }];
 const tips = ["Para maior precisão da medição dos ingredientes secos, peneire sempre antes de medir e nunca comprima o ingrediente a ser medido.", "Para conferir a medição dos ingredientes líquidos, deve-se colocar o recipiente em uma superfície plana e verificar o nível na altura dos olhos.", "Para medir ingredientes em forma de gordura sólida, deve-se retirar o ingrediente da geladeira com antecedência para que sejam medidas em temperatura ambiente. Ao ser colocado no recipiente a ser medido, deve-se fazer uma pequena pressão para retirar o ar."];
 const Conversions = () => {
+  const navigate = useNavigate();
   return <div className="px-6 py-8 pb-24">
       <h1 className="font-display text-4xl font-bold text-foreground text-center mb-8">
         Conversão de medidas
@@ -278,7 +238,7 @@ const Conversions = () => {
 
       {/* Botões de navegação */}
       <div className="flex justify-center gap-3 mb-8">
-        <button className="flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl bg-muted hover:bg-accent transition-colors">
+        <button onClick={() => navigate("/conversions/equivalencias")} className="flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl bg-muted hover:bg-accent transition-colors">
           <Scale size={22} strokeWidth={1.5} className="text-[hsl(var(--terracotta))]" />
           <span className="font-handwritten text-sm text-foreground">Equivalências</span>
         </button>
