@@ -13,6 +13,7 @@ import Recipes from "./pages/Recipes";
 import RecipeDetail from "./pages/RecipeDetail";
 import EditRecipe from "./pages/EditRecipe";
 import Conversions from "./pages/Conversions";
+import Equivalencias from "./pages/Equivalencias";
 import Account from "./pages/Account";
 import Favorites from "./pages/Favorites";
 import AddRecipeUrl from "./pages/AddRecipeUrl";
@@ -39,6 +40,7 @@ const App = () => (
                 <Route path="/recipe/:id" element={<RecipeDetail />} />
                 <Route path="/recipe/:id/edit" element={<EditRecipe />} />
                 <Route path="/conversions" element={<Conversions />} />
+                <Route path="/conversions/equivalencias" element={<Equivalencias />} />
                 <Route path="/account" element={<Account />} />
                 <Route path="/favorites" element={<Favorites />} />
                 <Route path="/add-recipe/url" element={<AddRecipeUrl />} />
