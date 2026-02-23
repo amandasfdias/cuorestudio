@@ -357,49 +357,85 @@ const styles = StyleSheet.create({
     color: COLORS.gray,
     marginTop: 2,
   },
-  urlModalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-end',
+  urlCloseButton: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+    zIndex: 10,
+    padding: 4,
   },
   urlModalContent: {
     backgroundColor: COLORS.white,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    padding: 20,
-    paddingBottom: Platform.OS === 'ios' ? 40 : 20,
+    borderRadius: 24,
+    padding: 24,
+    paddingTop: 32,
+    width: '100%',
+    maxWidth: 340,
+    alignItems: 'center',
   },
-  urlModalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  urlIconCircle: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    backgroundColor: COLORS.primary,
+    justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
   },
-  urlModalTitle: {
+  urlTitle: {
     fontFamily: 'AmaticSC-Bold',
-    fontSize: 28,
+    fontSize: 32,
     color: COLORS.primary,
+    textAlign: 'center',
+    marginBottom: 12,
+    textTransform: 'uppercase',
   },
-  urlInput: {
-    backgroundColor: COLORS.lightGray,
+  urlDescription: {
+    fontSize: 14,
+    color: COLORS.gray,
+    textAlign: 'center',
+    lineHeight: 20,
+    marginBottom: 20,
+    paddingHorizontal: 10,
+  },
+  socialIconsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 24,
+    marginBottom: 24,
+  },
+  socialItem: {
+    alignItems: 'center',
+  },
+  socialLabel: {
+    fontSize: 11,
+    color: COLORS.gray,
+    marginTop: 4,
+  },
+  urlInputField: {
+    width: '100%',
+    borderWidth: 1.5,
+    borderColor: COLORS.primary,
     borderRadius: 12,
     padding: 16,
     fontSize: 16,
     color: COLORS.primary,
-    marginBottom: 20,
+    marginBottom: 16,
   },
-  submitButton: {
+  importButton: {
+    width: '100%',
     backgroundColor: COLORS.primary,
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
   },
-  submitButtonDisabled: {
+  importButtonDisabled: {
     backgroundColor: COLORS.gray,
   },
-  submitButtonText: {
+  importButtonText: {
+    fontFamily: 'AmaticSC-Bold',
     color: COLORS.white,
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 20,
+    letterSpacing: 2,
   },
 });
