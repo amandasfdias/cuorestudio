@@ -115,7 +115,7 @@ If you cannot identify certain fields, leave them empty or with reasonable defau
     
     user_message = UserMessage(
         text="Please extract the recipe information from this image. Return ONLY valid JSON.",
-        image_contents=[image_content]
+        file_contents=[image_content]
     )
     
     response = await chat.send_message(user_message)
