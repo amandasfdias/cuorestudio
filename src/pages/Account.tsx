@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Heart, LogOut, Camera, Palette, Settings } from "lucide-react";
+import { User, Palette, Settings, Heart, LogOut, ChevronRight, Camera } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProfile } from "@/hooks/useProfile";
 import { useFavoriteRecipes } from "@/hooks/useRecipes";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import EditProfileModal from "@/components/account/EditProfileModal";
 import AppearanceModal from "@/components/account/AppearanceModal";
 import SettingsModal from "@/components/account/SettingsModal";
@@ -33,13 +32,6 @@ const Account = () => {
 
   const displayUsername = profile?.username || user?.email?.split("@")[0] || "usuario";
 
-  const menuItems = [
-    { icon: Heart, label: `Favoritas (${favorites?.length || 0})`, action: () => navigate("/favorites") },
-    { icon: Palette, label: "Aparência", action: () => setAppearanceModalOpen(true) },
-    { icon: Settings, label: "Configurações", action: () => setSettingsModalOpen(true) },
-    { icon: LogOut, label: "Sair", action: handleSignOut, destructive: true },
-  ];
-
   if (authLoading || profileLoading) {
     return (
       <div className="px-6 py-8">
@@ -51,7 +43,7 @@ const Account = () => {
   }
 
   return (
-    <div className="px-6 py-8">
+    <div className="px-6 py-8 pb-24">
       <h1 className="font-display text-4xl font-bold text-foreground mb-8">
         Minha Conta
       </h1>
@@ -85,42 +77,57 @@ const Account = () => {
         </div>
       </div>
 
-      {/* Edit Account Button */}
-      <Button
-        variant="outline"
-        className="w-full mb-6"
-        onClick={() => setEditModalOpen(true)}
-      >
-        Editar Conta
-      </Button>
+      {/* Main Menu */}
+      <div className="bg-secondary rounded-lg overflow-hidden mb-4">
+        <button
+          onClick={() => setEditModalOpen(true)}
+          className="w-full flex items-center gap-4 px-4 py-4 transition-colors hover:bg-accent text-left border-b border-border"
+        >
+          <User className="w-5 h-5 text-foreground" />
+          <span className="font-body text-foreground flex-1">Dados da Conta</span>
+          <ChevronRight className="w-4 h-4 text-muted-foreground" />
+        </button>
 
-      {/* Menu Items */}
+        <button
+          onClick={() => setAppearanceModalOpen(true)}
+          className="w-full flex items-center gap-4 px-4 py-4 transition-colors hover:bg-accent text-left border-b border-border"
+        >
+          <Palette className="w-5 h-5 text-foreground" />
+          <span className="font-body text-foreground flex-1">Aparência</span>
+          <ChevronRight className="w-4 h-4 text-muted-foreground" />
+        </button>
+
+        <button
+          onClick={() => setSettingsModalOpen(true)}
+          className="w-full flex items-center gap-4 px-4 py-4 transition-colors hover:bg-accent text-left"
+        >
+          <Settings className="w-5 h-5 text-foreground" />
+          <span className="font-body text-foreground flex-1">Configurações</span>
+          <ChevronRight className="w-4 h-4 text-muted-foreground" />
+        </button>
+      </div>
+
+      {/* Secondary Menu */}
+      <div className="bg-secondary rounded-lg overflow-hidden mb-4">
+        <button
+          onClick={() => navigate("/favorites")}
+          className="w-full flex items-center gap-4 px-4 py-4 transition-colors hover:bg-accent text-left"
+        >
+          <Heart className="w-5 h-5 text-foreground" />
+          <span className="font-body text-foreground flex-1">Favoritas ({favorites?.length || 0})</span>
+          <ChevronRight className="w-4 h-4 text-muted-foreground" />
+        </button>
+      </div>
+
+      {/* Logout */}
       <div className="bg-secondary rounded-lg overflow-hidden">
-        {menuItems.map((item, index) => {
-          const Icon = item.icon;
-          return (
-            <button
-              key={item.label}
-              onClick={item.action}
-              className={`w-full flex items-center gap-4 px-4 py-4 transition-colors hover:bg-accent text-left ${
-                index !== menuItems.length - 1 ? "border-b border-border" : ""
-              }`}
-            >
-              <Icon
-                className={`w-5 h-5 ${
-                  item.destructive ? "text-destructive" : "text-foreground"
-                }`}
-              />
-              <span
-                className={`font-body ${
-                  item.destructive ? "text-destructive" : "text-foreground"
-                }`}
-              >
-                {item.label}
-              </span>
-            </button>
-          );
-        })}
+        <button
+          onClick={handleSignOut}
+          className="w-full flex items-center gap-4 px-4 py-4 transition-colors hover:bg-accent text-left"
+        >
+          <LogOut className="w-5 h-5 text-destructive" />
+          <span className="font-body text-destructive">Sair</span>
+        </button>
       </div>
 
       <EditProfileModal
