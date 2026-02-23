@@ -18,7 +18,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: COLORS.primary,
         tabBarInactiveTintColor: COLORS.inactive,
         tabBarStyle: {
-          backgroundColor: COLORS.background,
+          backgroundColor: '#FFFFFF',
           borderTopColor: '#E5E5E5',
           borderTopWidth: 1,
           height: Platform.OS === 'ios' ? 85 : 65,
