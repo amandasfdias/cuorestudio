@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, SafeAreaView, Image } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Image, Text } from 'react-native';
 
 const COLORS = {
   primary: '#000000',
@@ -7,7 +7,7 @@ const COLORS = {
   background: '#f7f7f7',
 };
 
-const LOGO_URL = 'https://customer-assets.emergentagent.com/job_taste-notes/artifacts/snjgfpit_Logo%20Principal.png';
+const LOGO_URL = 'https://customer-assets.emergentagent.com/job_taste-notes/artifacts/5jji4s53_Logo%20Principal%202.png';
 
 export default function HomeScreen() {
   return (
@@ -18,6 +18,7 @@ export default function HomeScreen() {
           style={styles.logo}
           resizeMode="contain"
         />
+        <Text style={styles.tagline}>Suas receitas em um só lugar</Text>
       </View>
     </SafeAreaView>
   );
@@ -35,7 +36,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   logo: {
-    width: '100%',
+    width: 200,
     height: 200,
+  },
+  tagline: {
+    fontFamily: 'AmaticSC-Regular',
+    fontSize: 24,
+    color: COLORS.primary,
+    marginTop: 20,
+    textAlign: 'center',
   },
 });
