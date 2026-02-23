@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Image } from 'react-native';
 
 const COLORS = {
   primary: '#000000',
@@ -7,15 +7,17 @@ const COLORS = {
   background: '#FFFFFF',
 };
 
+const LOGO_URL = 'https://customer-assets.emergentagent.com/job_taste-notes/artifacts/snjgfpit_Logo%20Principal.png';
+
 export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <View style={styles.logoContainer}>
-          <Text style={styles.logoText}>Minhas</Text>
-          <Text style={styles.logoTextAccent}>Receitas</Text>
-        </View>
-        <Text style={styles.tagline}>Seu livro de receitas pessoal</Text>
+        <Image
+          source={{ uri: LOGO_URL }}
+          style={styles.logo}
+          resizeMode="contain"
+        />
       </View>
     </SafeAreaView>
   );
@@ -30,29 +32,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: 30,
   },
-  logoContainer: {
-    alignItems: 'center',
-  },
-  logoText: {
-    fontFamily: 'AmaticSC-Bold',
-    fontSize: 72,
-    color: COLORS.primary,
-    lineHeight: 80,
-  },
-  logoTextAccent: {
-    fontFamily: 'AmaticSC-Bold',
-    fontSize: 72,
-    color: COLORS.secondary,
-    lineHeight: 80,
-    marginTop: -10,
-  },
-  tagline: {
-    fontFamily: 'AmaticSC-Regular',
-    fontSize: 24,
-    color: COLORS.primary,
-    marginTop: 20,
-    opacity: 0.7,
+  logo: {
+    width: '100%',
+    height: 200,
   },
 });
