@@ -192,24 +192,56 @@ export default function AddScreen() {
       {/* URL Input Modal */}
       <Modal
         visible={showUrlInput}
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         onRequestClose={() => setShowUrlInput(false)}
       >
         <KeyboardAvoidingView 
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.urlModalOverlay}
+          style={styles.modalOverlay}
         >
           <View style={styles.urlModalContent}>
-            <View style={styles.urlModalHeader}>
-              <Text style={styles.urlModalTitle}>Colar URL da Receita</Text>
-              <TouchableOpacity onPress={() => setShowUrlInput(false)}>
-                <Ionicons name="close" size={24} color={COLORS.primary} />
-              </TouchableOpacity>
+            {/* Close Button */}
+            <TouchableOpacity style={styles.urlCloseButton} onPress={() => setShowUrlInput(false)}>
+              <Ionicons name="close" size={24} color={COLORS.primary} />
+            </TouchableOpacity>
+
+            {/* Link Icon */}
+            <View style={styles.urlIconCircle}>
+              <Ionicons name="link" size={32} color={COLORS.white} />
             </View>
 
+            {/* Title */}
+            <Text style={styles.urlTitle}>Importar Receita</Text>
+
+            {/* Description */}
+            <Text style={styles.urlDescription}>
+              Cole o link de uma receita e importaremos automaticamente os ingredientes e instruções.
+            </Text>
+
+            {/* Social Icons */}
+            <View style={styles.socialIconsContainer}>
+              <View style={styles.socialItem}>
+                <Ionicons name="logo-instagram" size={28} color="#E1306C" />
+                <Text style={styles.socialLabel}>Instagram</Text>
+              </View>
+              <View style={styles.socialItem}>
+                <Ionicons name="logo-facebook" size={28} color="#1877F2" />
+                <Text style={styles.socialLabel}>Facebook</Text>
+              </View>
+              <View style={styles.socialItem}>
+                <Ionicons name="logo-tiktok" size={28} color={COLORS.primary} />
+                <Text style={styles.socialLabel}>TikTok</Text>
+              </View>
+              <View style={styles.socialItem}>
+                <Ionicons name="globe-outline" size={28} color={COLORS.gray} />
+                <Text style={styles.socialLabel}>Sites</Text>
+              </View>
+            </View>
+
+            {/* URL Input */}
             <TextInput
-              style={styles.urlInput}
+              style={styles.urlInputField}
               placeholder="https://exemplo.com/receita"
               placeholderTextColor={COLORS.gray}
               value={url}
@@ -219,15 +251,16 @@ export default function AddScreen() {
               autoCorrect={false}
             />
 
+            {/* Import Button */}
             <TouchableOpacity
-              style={[styles.submitButton, !url.trim() && styles.submitButtonDisabled]}
+              style={[styles.importButton, !url.trim() && styles.importButtonDisabled]}
               onPress={handleUrlSubmit}
               disabled={!url.trim() || loading}
             >
               {loading ? (
                 <ActivityIndicator color={COLORS.white} />
               ) : (
-                <Text style={styles.submitButtonText}>Importar Receita</Text>
+                <Text style={styles.importButtonText}>IMPORTAR RECEITA</Text>
               )}
             </TouchableOpacity>
           </View>
