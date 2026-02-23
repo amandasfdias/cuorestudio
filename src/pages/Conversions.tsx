@@ -32,7 +32,7 @@ const Conversions = () => {
           <CookingPot size={22} strokeWidth={1.5} className="text-[hsl(var(--terracotta))]" />
           <span className="font-handwritten text-sm text-foreground">Medidas</span>
         </button>
-        <button className="flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl bg-muted hover:bg-accent transition-colors">
+        <button onClick={() => navigate("/conversions/calculadora")} className="flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl bg-muted hover:bg-accent transition-colors">
           <Calculator size={22} strokeWidth={1.5} className="text-[hsl(var(--terracotta))]" />
           <span className="font-handwritten text-sm text-foreground">Calculadora</span>
         </button>
