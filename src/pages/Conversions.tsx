@@ -1,4 +1,4 @@
-import { Scale } from "lucide-react";
+import { Scale, CookingPot, Calculator } from "lucide-react";
 const conversions = [{
   category: "Equivalências",
   items: [{
@@ -274,6 +274,22 @@ const Conversions = () => {
               </div>
         }
           </div>)}
+      </div>
+
+      {/* Botões de navegação */}
+      <div className="flex justify-center gap-3 mb-8">
+        <button className="flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl bg-muted hover:bg-accent transition-colors">
+          <Scale size={22} strokeWidth={1.5} className="text-[hsl(var(--terracotta))]" />
+          <span className="font-handwritten text-sm text-foreground">Equivalências</span>
+        </button>
+        <button className="flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl bg-muted hover:bg-accent transition-colors">
+          <CookingPot size={22} strokeWidth={1.5} className="text-[hsl(var(--terracotta))]" />
+          <span className="font-handwritten text-sm text-foreground">Medidas</span>
+        </button>
+        <button className="flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl bg-muted hover:bg-accent transition-colors">
+          <Calculator size={22} strokeWidth={1.5} className="text-[hsl(var(--terracotta))]" />
+          <span className="font-handwritten text-sm text-foreground">Calculadora</span>
+        </button>
       </div>
 
       <div className="space-y-6">
