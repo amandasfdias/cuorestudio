@@ -142,11 +142,11 @@ export default function AddScreen() {
             <View style={styles.optionsContainer}>
               {/* Colar URL */}
               <TouchableOpacity 
-                style={[styles.optionCard, styles.optionCardCream]} 
+                style={styles.optionCard} 
                 onPress={() => setShowUrlInput(true)}
                 activeOpacity={0.7}
               >
-                <View style={[styles.iconCircle, styles.iconCircleCream]}>
+                <View style={styles.iconCircle}>
                   <Ionicons name="link-outline" size={24} color={COLORS.primary} />
                 </View>
                 <View style={styles.optionTextContainer}>
