@@ -130,7 +130,7 @@ const [multiplier, setMultiplier] = useState(1);
   const instructionsList = recipe.instructions ? parseInstructions(recipe.instructions) : [];
 
   return (
-    <div className="pb-8">
+    <div className="pb-8 bg-white">
       {/* Hidden file input */}
       <input
         ref={fileInputRef}
@@ -140,7 +140,7 @@ const [multiplier, setMultiplier] = useState(1);
         className="hidden"
       />
 
-      <div className="relative aspect-[4/3] w-full bg-secondary">
+      <div className="relative aspect-[4/3] w-full" style={{ backgroundColor: '#f7f7f7' }}>
         <button
           onClick={() => navigate(-1)}
           className="absolute top-4 left-4 w-10 h-10 rounded-full bg-background/80 backdrop-blur flex items-center justify-center z-10"
@@ -263,7 +263,7 @@ const [multiplier, setMultiplier] = useState(1);
             {activeTab === "ingredients" && ingredientsList.length > 0 && (
               <div key="ingredients" className="animate-fade-in">
                 <div className="flex items-center justify-end mb-4">
-                  <div className="flex items-center gap-3 bg-secondary rounded-full px-3 py-1.5">
+                  <div className="flex items-center gap-3 rounded-full px-3 py-1.5" style={{ backgroundColor: '#f7f7f7' }}>
                     <button
                       onClick={() => setMultiplier(Math.max(0.5, multiplier - 0.5))}
                       className="w-7 h-7 rounded-full bg-background flex items-center justify-center text-foreground hover:bg-muted transition-colors"
@@ -281,7 +281,7 @@ const [multiplier, setMultiplier] = useState(1);
                     </button>
                   </div>
                 </div>
-                <div className="bg-secondary rounded-lg p-5 space-y-3">
+                <div className="rounded-lg p-5 space-y-3" style={{ backgroundColor: '#f7f7f7' }}>
                   {ingredientsList.map((ingredient, index) => (
                     <div key={index} className="flex items-start gap-3">
                       <span className="text-sm flex-shrink-0">♥</span>
@@ -298,7 +298,7 @@ const [multiplier, setMultiplier] = useState(1);
             {activeTab === "instructions" && instructionsList.length > 0 && (
               <div key="instructions" className="animate-fade-in space-y-4">
                 {instructionsList.map((instruction, index) => (
-                  <div key={index} className="flex gap-4 bg-secondary rounded-lg p-4">
+                  <div key={index} className="flex gap-4 rounded-lg p-4" style={{ backgroundColor: '#f7f7f7' }}>
                     <div className="w-8 h-8 rounded-full bg-terracotta flex items-center justify-center flex-shrink-0">
                       <span className="font-handwritten text-sm text-white">
                         {index + 1}
