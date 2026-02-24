@@ -27,8 +27,9 @@ const RecipeDetail = () => {
   const toggleFavorite = useToggleFavorite();
   const deleteRecipe = useDeleteRecipe();
   const updateRecipe = useUpdateRecipe();
-  const [multiplier, setMultiplier] = useState(1);
+const [multiplier, setMultiplier] = useState(1);
   const [notes, setNotes] = useState("");
+  const [activeTab, setActiveTab] = useState<"ingredients" | "instructions">("ingredients");
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -232,62 +233,84 @@ const RecipeDetail = () => {
           </a>
         )}
 
-        {ingredientsList.length > 0 && (
+        {(ingredientsList.length > 0 || instructionsList.length > 0) && (
           <div>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-display text-2xl text-foreground font-bold">
+            {/* Tab Switcher */}
+            <div className="flex bg-secondary rounded-full p-1 mb-6">
+              <button
+                onClick={() => setActiveTab("ingredients")}
+                className={`flex-1 py-2.5 rounded-full text-sm font-body font-medium transition-all ${
+                  activeTab === "ingredients"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground"
+                }`}
+              >
                 Ingredientes
-              </h2>
-              <div className="flex items-center gap-3 bg-secondary rounded-full px-3 py-1.5">
-                <button
-                  onClick={() => setMultiplier(Math.max(0.5, multiplier - 0.5))}
-                  className="w-7 h-7 rounded-full bg-background flex items-center justify-center text-foreground hover:bg-muted transition-colors"
-                >
-                  <Minus className="w-4 h-4" />
-                </button>
-                <span className="font-body text-sm font-medium min-w-[2rem] text-center">
-                  {multiplier}x
-                </span>
-                <button
-                  onClick={() => setMultiplier(multiplier + 0.5)}
-                  className="w-7 h-7 rounded-full bg-background flex items-center justify-center text-foreground hover:bg-muted transition-colors"
-                >
-                  <Plus className="w-4 h-4" />
-                </button>
-              </div>
+              </button>
+              <button
+                onClick={() => setActiveTab("instructions")}
+                className={`flex-1 py-2.5 rounded-full text-sm font-body font-medium transition-all ${
+                  activeTab === "instructions"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground"
+                }`}
+              >
+                Preparo
+              </button>
             </div>
-            <div className="bg-secondary rounded-lg p-5 space-y-3">
-              {ingredientsList.map((ingredient, index) => (
-                <div key={index} className="flex items-start gap-3">
-                  <span className="text-sm flex-shrink-0">♥</span>
-                  <span className="font-body text-sm text-foreground leading-relaxed">
-                    {applyMultiplier(ingredient)}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
-        {instructionsList.length > 0 && (
-          <div>
-            <h2 className="font-display text-2xl text-foreground font-bold mb-4">
-              Modo de Preparo
-            </h2>
-            <div className="space-y-4">
-              {instructionsList.map((instruction, index) => (
-                <div key={index} className="flex gap-4 bg-secondary rounded-lg p-4">
-                  <div className="w-8 h-8 rounded-full bg-terracotta flex items-center justify-center flex-shrink-0">
-                    <span className="font-handwritten text-sm text-white">
-                      {index + 1}
+            {/* Ingredients Tab */}
+            {activeTab === "ingredients" && ingredientsList.length > 0 && (
+              <div>
+                <div className="flex items-center justify-end mb-4">
+                  <div className="flex items-center gap-3 bg-secondary rounded-full px-3 py-1.5">
+                    <button
+                      onClick={() => setMultiplier(Math.max(0.5, multiplier - 0.5))}
+                      className="w-7 h-7 rounded-full bg-background flex items-center justify-center text-foreground hover:bg-muted transition-colors"
+                    >
+                      <Minus className="w-4 h-4" />
+                    </button>
+                    <span className="font-body text-sm font-medium min-w-[2rem] text-center">
+                      {multiplier}x
                     </span>
+                    <button
+                      onClick={() => setMultiplier(multiplier + 0.5)}
+                      className="w-7 h-7 rounded-full bg-background flex items-center justify-center text-foreground hover:bg-muted transition-colors"
+                    >
+                      <Plus className="w-4 h-4" />
+                    </button>
                   </div>
-                  <p className="font-body text-sm text-foreground leading-relaxed pt-1">
-                    {instruction}
-                  </p>
                 </div>
-              ))}
-            </div>
+                <div className="bg-secondary rounded-lg p-5 space-y-3">
+                  {ingredientsList.map((ingredient, index) => (
+                    <div key={index} className="flex items-start gap-3">
+                      <span className="text-sm flex-shrink-0">♥</span>
+                      <span className="font-body text-sm text-foreground leading-relaxed">
+                        {applyMultiplier(ingredient)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Instructions Tab */}
+            {activeTab === "instructions" && instructionsList.length > 0 && (
+              <div className="space-y-4">
+                {instructionsList.map((instruction, index) => (
+                  <div key={index} className="flex gap-4 bg-secondary rounded-lg p-4">
+                    <div className="w-8 h-8 rounded-full bg-terracotta flex items-center justify-center flex-shrink-0">
+                      <span className="font-handwritten text-sm text-white">
+                        {index + 1}
+                      </span>
+                    </div>
+                    <p className="font-body text-sm text-foreground leading-relaxed pt-1">
+                      {instruction}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
