@@ -236,7 +236,7 @@ const [multiplier, setMultiplier] = useState(1);
         {(ingredientsList.length > 0 || instructionsList.length > 0) && (
           <div>
             {/* Tab Switcher */}
-            <div className="flex bg-secondary rounded-full p-1 mb-6">
+            <div className="flex rounded-full p-1 mb-6" style={{ backgroundColor: '#f7f7f7' }}>
               <button
                 onClick={() => setActiveTab("ingredients")}
                 className={`flex-1 py-2.5 rounded-full text-sm font-body font-medium transition-all ${
