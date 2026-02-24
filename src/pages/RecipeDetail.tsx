@@ -261,7 +261,7 @@ const [multiplier, setMultiplier] = useState(1);
 
             {/* Ingredients Tab */}
             {activeTab === "ingredients" && ingredientsList.length > 0 && (
-              <div>
+              <div key="ingredients" className="animate-fade-in">
                 <div className="flex items-center justify-end mb-4">
                   <div className="flex items-center gap-3 bg-secondary rounded-full px-3 py-1.5">
                     <button
@@ -296,7 +296,7 @@ const [multiplier, setMultiplier] = useState(1);
 
             {/* Instructions Tab */}
             {activeTab === "instructions" && instructionsList.length > 0 && (
-              <div className="space-y-4">
+              <div key="instructions" className="animate-fade-in space-y-4">
                 {instructionsList.map((instruction, index) => (
                   <div key={index} className="flex gap-4 bg-secondary rounded-lg p-4">
                     <div className="w-8 h-8 rounded-full bg-terracotta flex items-center justify-center flex-shrink-0">
