@@ -64,7 +64,7 @@ const TabBar = () => {
                 className="flex items-center justify-center flex-1 py-2 transition-colors"
               >
                 <Icon
-                  className={`w-5 h-5 transition-colors ${
+                  className={`w-6 h-6 transition-colors ${
                     isActive ? "text-foreground" : "text-muted-foreground"
                   }`}
                   strokeWidth={1.5}
