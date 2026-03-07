@@ -107,10 +107,10 @@ const AddRecipeUrlModal = ({ open, onOpenChange }: AddRecipeUrlModalProps) => {
         {platforms.map((platform) => (
             <div
               key={platform.name}
-              className="flex flex-col items-center gap-1"
+              className="flex flex-col items-center gap-1.5 w-14"
               title={platform.name}
             >
-              <img src={platform.icon} alt={platform.name} className="w-6 h-6" />
+              <img src={platform.icon} alt={platform.name} className="w-10 h-10 object-contain" />
               <span className="text-xs text-muted-foreground">{platform.name}</span>
             </div>
           ))}
