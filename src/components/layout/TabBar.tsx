@@ -50,8 +50,8 @@ const TabBar = () => {
                   onClick={() => handleTabClick(tab)}
                   className="flex flex-col items-center justify-center flex-1"
                 >
-                  <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center shadow-lg transition-transform active:scale-95">
-                    <Icon className="w-6 h-6 text-primary-foreground" strokeWidth={2.5} />
+                  <div className="w-12 h-12 rounded-full bg-foreground flex items-center justify-center shadow-lg transition-transform active:scale-95">
+                    <Icon className="w-6 h-6 text-background" strokeWidth={2.5} />
                   </div>
                 </button>
               );
@@ -65,12 +65,12 @@ const TabBar = () => {
               >
                 <Icon
                   className={`w-5 h-5 transition-colors ${
-                    isActive ? "text-[hsl(var(--tab-active))]" : "text-muted-foreground"
+                    isActive ? "text-foreground" : "text-muted-foreground"
                   }`}
                   strokeWidth={1.5}
                 />
                 <span className={`text-[10px] font-body transition-colors ${
-                  isActive ? "text-[hsl(var(--tab-active))]" : "text-muted-foreground"
+                  isActive ? "text-foreground" : "text-muted-foreground"
                 }`}>
                   {tab.label}
                 </span>
