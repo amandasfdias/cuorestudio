@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link2, Instagram, Facebook, Globe, Loader2 } from "lucide-react";
+import { Link2, Loader2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -12,6 +12,10 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { recipesApi } from "@/lib/api/recipes";
 import { useCreateRecipe } from "@/hooks/useRecipes";
+import instagramIcon from "@/assets/icons/instagram-handdrawn.png";
+import facebookIcon from "@/assets/icons/facebook-handdrawn.png";
+import tiktokIcon from "@/assets/icons/tiktok-handdrawn.png";
+import globeIcon from "@/assets/icons/globe-handdrawn.png";
 
 interface AddRecipeUrlModalProps {
   open: boolean;
