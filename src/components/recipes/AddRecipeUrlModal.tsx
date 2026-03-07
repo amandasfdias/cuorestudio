@@ -104,19 +104,16 @@ const AddRecipeUrlModal = ({ open, onOpenChange }: AddRecipeUrlModalProps) => {
         </p>
 
         <div className="flex items-center justify-center gap-4 mb-4">
-          {platforms.map((platform) => {
-            const Icon = platform.icon;
-            return (
-              <div
-                key={platform.name}
-                className="flex flex-col items-center gap-1"
-                title={platform.name}
-              >
-                <Icon className={`w-5 h-5 ${platform.color}`} />
-                <span className="text-xs text-muted-foreground">{platform.name}</span>
-              </div>
-            );
-          })}
+        {platforms.map((platform) => (
+            <div
+              key={platform.name}
+              className="flex flex-col items-center gap-1"
+              title={platform.name}
+            >
+              <img src={platform.icon} alt={platform.name} className="w-6 h-6" />
+              <span className="text-xs text-muted-foreground">{platform.name}</span>
+            </div>
+          ))}
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
