@@ -79,10 +79,10 @@ const AddRecipeUrlModal = ({ open, onOpenChange }: AddRecipeUrlModalProps) => {
   };
 
   const platforms = [
-    { icon: Instagram, name: "Instagram", color: "text-pink-500" },
-    { icon: Facebook, name: "Facebook", color: "text-blue-600" },
-    { icon: Globe, name: "TikTok", color: "text-foreground" },
-    { icon: Globe, name: "Sites", color: "text-muted-foreground" },
+    { icon: instagramIcon, name: "Instagram" },
+    { icon: facebookIcon, name: "Facebook" },
+    { icon: tiktokIcon, name: "TikTok" },
+    { icon: globeIcon, name: "Sites" },
   ];
 
   return (
