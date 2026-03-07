@@ -61,7 +61,7 @@ const TabBar = () => {
               <button
                 key={tab.path}
                 onClick={() => handleTabClick(tab)}
-                className="flex flex-col items-center justify-center gap-1 flex-1 py-2 transition-colors"
+                className="flex items-center justify-center flex-1 py-2 transition-colors"
               >
                 <Icon
                   className={`w-5 h-5 transition-colors ${
@@ -69,11 +69,6 @@ const TabBar = () => {
                   }`}
                   strokeWidth={1.5}
                 />
-                <span className={`text-[10px] font-body transition-colors ${
-                  isActive ? "text-foreground" : "text-muted-foreground"
-                }`}>
-                  {tab.label}
-                </span>
               </button>
             );
           })}
