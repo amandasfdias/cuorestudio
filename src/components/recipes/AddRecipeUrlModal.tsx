@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link2, Loader2 } from "lucide-react";
+import { Link2, Instagram, Facebook, Globe, Loader2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -12,10 +12,6 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { recipesApi } from "@/lib/api/recipes";
 import { useCreateRecipe } from "@/hooks/useRecipes";
-import instagramIcon from "@/assets/icons/instagram-handdrawn.png";
-import facebookIcon from "@/assets/icons/facebook-handdrawn.png";
-import tiktokIcon from "@/assets/icons/tiktok-handdrawn.png";
-import globeIcon from "@/assets/icons/globe-handdrawn.png";
 
 interface AddRecipeUrlModalProps {
   open: boolean;
@@ -79,10 +75,10 @@ const AddRecipeUrlModal = ({ open, onOpenChange }: AddRecipeUrlModalProps) => {
   };
 
   const platforms = [
-    { icon: instagramIcon, name: "Instagram" },
-    { icon: facebookIcon, name: "Facebook" },
-    { icon: tiktokIcon, name: "TikTok" },
-    { icon: globeIcon, name: "Sites" },
+    { icon: Instagram, name: "Instagram", color: "text-pink-500" },
+    { icon: Facebook, name: "Facebook", color: "text-blue-600" },
+    { icon: Globe, name: "TikTok", color: "text-foreground" },
+    { icon: Globe, name: "Sites", color: "text-muted-foreground" },
   ];
 
   return (
@@ -104,16 +100,19 @@ const AddRecipeUrlModal = ({ open, onOpenChange }: AddRecipeUrlModalProps) => {
         </p>
 
         <div className="flex items-center justify-center gap-4 mb-4">
-        {platforms.map((platform) => (
-            <div
-              key={platform.name}
-              className="flex flex-col items-center gap-1.5 w-14"
-              title={platform.name}
-            >
-              <img src={platform.icon} alt={platform.name} className="w-10 h-10 object-contain" />
-              <span className="text-xs text-muted-foreground">{platform.name}</span>
-            </div>
-          ))}
+          {platforms.map((platform) => {
+            const Icon = platform.icon;
+            return (
+              <div
+                key={platform.name}
+                className="flex flex-col items-center gap-1"
+                title={platform.name}
+              >
+                <Icon className={`w-5 h-5 ${platform.color}`} />
+                <span className="text-xs text-muted-foreground">{platform.name}</span>
+              </div>
+            );
+          })}
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
