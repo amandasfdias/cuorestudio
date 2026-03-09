@@ -51,29 +51,29 @@ const AddRecipeModal = ({ open, onOpenChange }: AddRecipeModalProps) => {
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-sm mx-auto">
+        <DialogContent className="max-w-sm mx-auto rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="font-display text-3xl text-center">
+            <DialogTitle className="font-display text-2xl tracking-widest text-center uppercase">
               Nova Receita
             </DialogTitle>
           </DialogHeader>
-          <div className="grid gap-3 py-4">
+          <div className="grid gap-4 py-4">
             {options.map((option) => {
               const Icon = option.icon;
               return (
                 <button
                   key={option.title}
                   onClick={option.action}
-                  className="flex items-center gap-4 p-4 rounded-lg bg-muted hover:bg-accent transition-colors text-left group"
+                  className="flex items-center gap-4 p-5 rounded-xl bg-muted/60 hover:bg-muted transition-colors text-left group"
                 >
-                  <div className="w-12 h-12 rounded-full bg-background flex items-center justify-center group-hover:bg-warm-beige transition-colors">
-                    <Icon className="w-5 h-5 text-foreground" />
+                  <div className="w-12 h-12 flex items-center justify-center">
+                    <Icon className="w-7 h-7 text-[hsl(15,50%,55%)]" strokeWidth={1.5} />
                   </div>
                   <div>
-                    <h3 className="font-display text-xl text-foreground">
+                    <h3 className="font-display text-xl uppercase tracking-wider text-foreground">
                       {option.title}
                     </h3>
-                    <p className="text-sm text-muted-foreground font-body">
+                    <p className="text-sm text-muted-foreground/60 font-body">
                       {option.description}
                     </p>
                   </div>
