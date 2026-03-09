@@ -70,7 +70,7 @@ const AddRecipeModal = ({ open, onOpenChange }: AddRecipeModalProps) => {
                     <Icon className="w-7 h-7 text-[hsl(15,50%,55%)]" strokeWidth={1.5} />
                   </div>
                   <div>
-                    <h3 className="font-display text-xl uppercase tracking-wider text-foreground">
+                    <h3 className="font-display text-xl uppercase tracking-wider text-foreground font-bold">
                       {option.title}
                     </h3>
                     <p className="text-sm text-muted-foreground/60 font-body">
