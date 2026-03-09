@@ -40,7 +40,7 @@ const AddRecipeModal = ({ open, onOpenChange }: AddRecipeModalProps) => {
     {
       icon: Camera,
       title: "Digitalizar Foto",
-      description: "Escaneie uma receita com a câmera",
+      description: "Escaneie com a câmera",
       action: () => {
         onOpenChange(false);
         navigate("/add-recipe/scan");
