@@ -53,7 +53,7 @@ const AddRecipeModal = ({ open, onOpenChange }: AddRecipeModalProps) => {
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="max-w-sm mx-auto rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="font-display text-2xl tracking-widest text-center uppercase">
+            <DialogTitle className="font-display text-3xl font-bold tracking-widest text-center uppercase">
               Nova Receita
             </DialogTitle>
           </DialogHeader>
