@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { useNavigate } from "react-router-dom";
 import AddRecipeUrlModal from "./AddRecipeUrlModal";
+import AddRecipeScanModal from "./AddRecipeScanModal";
 
 interface AddRecipeModalProps {
   open: boolean;
@@ -17,6 +18,7 @@ interface AddRecipeModalProps {
 const AddRecipeModal = ({ open, onOpenChange }: AddRecipeModalProps) => {
   const navigate = useNavigate();
   const [urlModalOpen, setUrlModalOpen] = useState(false);
+  const [scanModalOpen, setScanModalOpen] = useState(false);
 
   const options = [
     {
@@ -43,7 +45,7 @@ const AddRecipeModal = ({ open, onOpenChange }: AddRecipeModalProps) => {
       description: "Escaneie com a câmera",
       action: () => {
         onOpenChange(false);
-        navigate("/add-recipe/scan");
+        setScanModalOpen(true);
       },
     },
   ];
@@ -85,6 +87,7 @@ const AddRecipeModal = ({ open, onOpenChange }: AddRecipeModalProps) => {
       </Dialog>
 
       <AddRecipeUrlModal open={urlModalOpen} onOpenChange={setUrlModalOpen} />
+      <AddRecipeScanModal open={scanModalOpen} onOpenChange={setScanModalOpen} />
     </>
   );
 };
