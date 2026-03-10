@@ -127,23 +127,13 @@ IMPORTANTE: Retorne APENAS o JSON, sem markdown, sem explicações.`
       const errorText = await aiResponse.text();
       console.error('AI API error:', aiResponse.status, errorText);
       
-      if (aiResponse.status === 429) {
-        return new Response(
-          JSON.stringify({ success: false, error: 'Limite de requisições excedido. Tente novamente em alguns minutos.' }),
-          { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-      
-      if (aiResponse.status === 402) {
-        return new Response(
-          JSON.stringify({ success: false, error: 'Créditos insuficientes. Por favor, adicione créditos na sua conta.' }),
-          { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
+      let errorMsg = 'Erro ao processar a receita com IA';
+      if (aiResponse.status === 429) errorMsg = 'Limite de requisições excedido. Tente novamente em alguns minutos.';
+      if (aiResponse.status === 402) errorMsg = 'Créditos insuficientes. Por favor, adicione créditos na sua conta.';
       
       return new Response(
-        JSON.stringify({ success: false, error: 'Erro ao processar a receita com IA' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ success: false, error: errorMsg }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
