@@ -15,6 +15,7 @@ export type ScrapedRecipe = {
 type ScrapeResponse = {
   success: boolean;
   error?: string;
+  unsupported?: boolean;
   data?: ScrapedRecipe;
 };
 
