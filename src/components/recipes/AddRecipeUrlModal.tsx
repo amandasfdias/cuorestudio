@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link2, Instagram, Facebook, Globe, Loader2 } from "lucide-react";
+import { Link2, Instagram, Facebook, Globe, Loader2, ClipboardPaste, ArrowLeft } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -7,6 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -30,13 +31,53 @@ const YouTubeIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+type ModalMode = "url" | "paste";
+
 const AddRecipeUrlModal = ({ open, onOpenChange }: AddRecipeUrlModalProps) => {
   const [url, setUrl] = useState("");
+  const [pastedText, setPastedText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [mode, setMode] = useState<ModalMode>("url");
   const navigate = useNavigate();
   const createRecipe = useCreateRecipe();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleReset = () => {
+    setUrl("");
+    setPastedText("");
+    setMode("url");
+    setIsLoading(false);
+  };
+
+  const handleClose = (open: boolean) => {
+    if (!open) handleReset();
+    onOpenChange(open);
+  };
+
+  const saveRecipe = async (recipeData: any) => {
+    const newRecipe = await createRecipe.mutateAsync({
+      title: recipeData.title,
+      ingredients: recipeData.ingredients,
+      instructions: recipeData.instructions,
+      prep_time: recipeData.prep_time,
+      cook_time: recipeData.cook_time,
+      servings: recipeData.servings,
+      category: recipeData.category,
+      source_url: recipeData.source_url,
+      image_url: recipeData.image_url,
+    });
+
+    toast.success("Receita importada com sucesso!");
+    handleReset();
+    onOpenChange(false);
+
+    if (newRecipe?.id) {
+      navigate(`/recipe/${newRecipe.id}`);
+    } else {
+      navigate("/recipes");
+    }
+  };
+
+  const handleUrlSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!url.trim()) {
       toast.error("Por favor, insira uma URL");
@@ -44,41 +85,50 @@ const AddRecipeUrlModal = ({ open, onOpenChange }: AddRecipeUrlModalProps) => {
     }
 
     setIsLoading(true);
-    
+
     try {
       const response = await recipesApi.scrapeFromUrl(url);
 
       if (!response.success || !response.data) {
-        toast.error(response.error || "Não foi possível importar a receita");
+        if (response.unsupported) {
+          setMode("paste");
+          toast.info("Site não suportado. Cole o texto da receita abaixo.");
+        } else {
+          toast.error(response.error || "Não foi possível importar a receita");
+        }
         return;
       }
 
-      const recipeData = response.data;
-      
-      const newRecipe = await createRecipe.mutateAsync({
-        title: recipeData.title,
-        ingredients: recipeData.ingredients,
-        instructions: recipeData.instructions,
-        prep_time: recipeData.prep_time,
-        cook_time: recipeData.cook_time,
-        servings: recipeData.servings,
-        category: recipeData.category,
-        source_url: recipeData.source_url,
-        image_url: recipeData.image_url,
-      });
-
-      toast.success("Receita importada com sucesso!");
-      setUrl("");
-      onOpenChange(false);
-      
-      if (newRecipe?.id) {
-        navigate(`/recipe/${newRecipe.id}`);
-      } else {
-        navigate("/recipes");
-      }
+      await saveRecipe(response.data);
     } catch (error) {
       console.error("Error importing recipe:", error);
       toast.error("Erro ao importar receita. Tente novamente.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleTextSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!pastedText.trim()) {
+      toast.error("Por favor, cole o texto da receita");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await recipesApi.extractFromText(pastedText);
+
+      if (!response.success || !response.data) {
+        toast.error(response.error || "Não foi possível extrair a receita do texto");
+        return;
+      }
+
+      await saveRecipe(response.data);
+    } catch (error) {
+      console.error("Error extracting recipe:", error);
+      toast.error("Erro ao processar receita. Tente novamente.");
     } finally {
       setIsLoading(false);
     }
@@ -93,71 +143,118 @@ const AddRecipeUrlModal = ({ open, onOpenChange }: AddRecipeUrlModalProps) => {
   ];
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-w-sm mx-auto rounded-2xl">
         <DialogHeader>
           <div className="flex items-center justify-center mb-3">
-            <Link2 className="w-10 h-10 text-muted-foreground" strokeWidth={1.5} />
+            {mode === "url" ? (
+              <Link2 className="w-10 h-10 text-muted-foreground" strokeWidth={1.5} />
+            ) : (
+              <ClipboardPaste className="w-10 h-10 text-muted-foreground" strokeWidth={1.5} />
+            )}
           </div>
           <DialogTitle className="font-display text-xl tracking-widest text-center uppercase">
-            Importar Receita
+            {mode === "url" ? "Importar Receita" : "Colar Receita"}
           </DialogTitle>
         </DialogHeader>
 
-        <p className="text-muted-foreground font-body text-sm text-center">
-          Cole o link de uma receita e importaremos automaticamente os ingredientes e instruções.
-        </p>
+        {mode === "url" ? (
+          <>
+            <p className="text-muted-foreground font-body text-sm text-center">
+              Cole o link de uma receita e importaremos automaticamente os ingredientes e instruções.
+            </p>
 
-        <p className="text-muted-foreground/70 font-body text-xs text-center italic mb-2">
-          <span className="font-semibold not-italic">Dica:</span> Funciona melhor quando a receita está incluída na descrição ou na legenda do vídeo.
-        </p>
+            <p className="text-muted-foreground/70 font-body text-xs text-center italic mb-2">
+              <span className="font-semibold not-italic">Dica:</span> Funciona melhor quando a receita está incluída na descrição ou na legenda do vídeo.
+            </p>
 
-        <div className="flex items-center justify-center gap-5 mb-2">
-          {platforms.map((platform) => {
-            const Icon = platform.icon;
-            const CustomIcon = (platform as any).component;
-            return (
-              <div
-                key={platform.name}
-                className="flex flex-col items-center gap-1.5"
-                title={platform.name}
+            <div className="flex items-center justify-center gap-5 mb-2">
+              {platforms.map((platform) => {
+                const Icon = platform.icon;
+                const CustomIcon = (platform as any).component;
+                return (
+                  <div
+                    key={platform.name}
+                    className="flex flex-col items-center gap-1.5"
+                    title={platform.name}
+                  >
+                    {CustomIcon ? (
+                      <CustomIcon className={`w-7 h-7 ${platform.color}`} />
+                    ) : Icon ? (
+                      <Icon className={`w-7 h-7 ${platform.color}`} strokeWidth={1.5} />
+                    ) : null}
+                    <span className="text-[10px] text-muted-foreground">{platform.name}</span>
+                  </div>
+                );
+              })}
+            </div>
+
+            <form onSubmit={handleUrlSubmit} className="space-y-4">
+              <Input
+                type="url"
+                placeholder="https://exemplo.com/receita"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                className="h-12 rounded-xl border-2 border-foreground/80 focus-visible:ring-foreground/30"
+                autoFocus
+                disabled={isLoading}
+              />
+              <Button
+                type="submit"
+                className="w-full h-12 rounded-xl bg-foreground text-background hover:bg-foreground/90 font-body text-base"
+                disabled={isLoading}
               >
-                {CustomIcon ? (
-                  <CustomIcon className={`w-7 h-7 ${platform.color}`} />
-                ) : Icon ? (
-                  <Icon className={`w-7 h-7 ${platform.color}`} strokeWidth={1.5} />
-                ) : null}
-                <span className="text-[10px] text-muted-foreground">{platform.name}</span>
-              </div>
-            );
-          })}
-        </div>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Importando...
+                  </>
+                ) : (
+                  "Importar Receita"
+                )}
+              </Button>
+            </form>
+          </>
+        ) : (
+          <>
+            <p className="text-muted-foreground font-body text-sm text-center">
+              O site não é suportado para importação automática. Cole o texto da receita abaixo e extrairemos as informações com IA.
+            </p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            type="url"
-            placeholder="https://exemplo.com/receita"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            className="h-12 rounded-xl border-2 border-foreground/80 focus-visible:ring-foreground/30"
-            autoFocus
-            disabled={isLoading}
-          />
-          <Button 
-            type="submit" 
-            className="w-full h-12 rounded-xl bg-foreground text-background hover:bg-foreground/90 font-body text-base" 
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Importando...
-              </>
-            ) : (
-              "Importar Receita"
-            )}
-          </Button>
-        </form>
+            <form onSubmit={handleTextSubmit} className="space-y-4">
+              <Textarea
+                placeholder="Cole aqui o texto da receita (ingredientes, modo de preparo, etc.)"
+                value={pastedText}
+                onChange={(e) => setPastedText(e.target.value)}
+                className="min-h-[180px] rounded-xl border-2 border-foreground/80 focus-visible:ring-foreground/30 resize-none font-body text-sm"
+                autoFocus
+                disabled={isLoading}
+              />
+              <Button
+                type="submit"
+                className="w-full h-12 rounded-xl bg-foreground text-background hover:bg-foreground/90 font-body text-base"
+                disabled={isLoading || !pastedText.trim()}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Extraindo receita...
+                  </>
+                ) : (
+                  "Extrair Receita"
+                )}
+              </Button>
+              <button
+                type="button"
+                onClick={() => setMode("url")}
+                className="flex items-center gap-1.5 mx-auto text-sm text-muted-foreground hover:text-foreground transition-colors font-body"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Voltar para importação por URL
+              </button>
+            </form>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );

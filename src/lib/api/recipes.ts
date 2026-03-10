@@ -15,6 +15,7 @@ export type ScrapedRecipe = {
 type ScrapeResponse = {
   success: boolean;
   error?: string;
+  unsupported?: boolean;
   data?: ScrapedRecipe;
 };
 
@@ -22,6 +23,19 @@ export const recipesApi = {
   async scrapeFromUrl(url: string): Promise<ScrapeResponse> {
     const { data, error } = await supabase.functions.invoke('scrape-recipe', {
       body: { url },
+    });
+
+    if (error) {
+      console.error('Error calling scrape-recipe:', error);
+      return { success: false, error: error.message };
+    }
+
+    return data;
+  },
+
+  async extractFromText(text: string): Promise<ScrapeResponse> {
+    const { data, error } = await supabase.functions.invoke('scrape-recipe', {
+      body: { text },
     });
 
     if (error) {
