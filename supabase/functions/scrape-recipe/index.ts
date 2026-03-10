@@ -64,9 +64,14 @@ serve(async (req) => {
 
     if (!scrapeResponse.ok || !scrapeData.success) {
       console.error('Firecrawl API error:', scrapeData);
+      const firecrawlError = scrapeData.error || '';
+      const isUnsupported = firecrawlError.includes('do not support this site');
+      const errorMsg = isUnsupported
+        ? 'Este site não é suportado para importação automática. Tente copiar a receita e adicionar manualmente.'
+        : 'Falha ao acessar a página. Verifique se a URL está correta.';
       return new Response(
-        JSON.stringify({ success: false, error: 'Falha ao acessar a página. Verifique se a URL está correta.' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ success: false, error: errorMsg }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
@@ -76,7 +81,7 @@ serve(async (req) => {
     if (!pageContent) {
       return new Response(
         JSON.stringify({ success: false, error: 'Não foi possível extrair conteúdo da página' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
@@ -122,23 +127,13 @@ IMPORTANTE: Retorne APENAS o JSON, sem markdown, sem explicações.`
       const errorText = await aiResponse.text();
       console.error('AI API error:', aiResponse.status, errorText);
       
-      if (aiResponse.status === 429) {
-        return new Response(
-          JSON.stringify({ success: false, error: 'Limite de requisições excedido. Tente novamente em alguns minutos.' }),
-          { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-      
-      if (aiResponse.status === 402) {
-        return new Response(
-          JSON.stringify({ success: false, error: 'Créditos insuficientes. Por favor, adicione créditos na sua conta.' }),
-          { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
+      let errorMsg = 'Erro ao processar a receita com IA';
+      if (aiResponse.status === 429) errorMsg = 'Limite de requisições excedido. Tente novamente em alguns minutos.';
+      if (aiResponse.status === 402) errorMsg = 'Créditos insuficientes. Por favor, adicione créditos na sua conta.';
       
       return new Response(
-        JSON.stringify({ success: false, error: 'Erro ao processar a receita com IA' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ success: false, error: errorMsg }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
@@ -167,14 +162,14 @@ IMPORTANTE: Retorne APENAS o JSON, sem markdown, sem explicações.`
       console.error('Failed to parse AI response:', parseError);
       return new Response(
         JSON.stringify({ success: false, error: 'Não foi possível extrair a receita desta página' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
     if (recipeData.error) {
       return new Response(
         JSON.stringify({ success: false, error: recipeData.error }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
