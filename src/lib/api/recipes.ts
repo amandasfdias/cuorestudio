@@ -32,4 +32,17 @@ export const recipesApi = {
 
     return data;
   },
+
+  async extractFromText(text: string): Promise<ScrapeResponse> {
+    const { data, error } = await supabase.functions.invoke('scrape-recipe', {
+      body: { text },
+    });
+
+    if (error) {
+      console.error('Error calling scrape-recipe:', error);
+      return { success: false, error: error.message };
+    }
+
+    return data;
+  },
 };
