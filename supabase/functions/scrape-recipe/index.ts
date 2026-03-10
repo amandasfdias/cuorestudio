@@ -64,9 +64,14 @@ serve(async (req) => {
 
     if (!scrapeResponse.ok || !scrapeData.success) {
       console.error('Firecrawl API error:', scrapeData);
+      const firecrawlError = scrapeData.error || '';
+      const isUnsupported = firecrawlError.includes('do not support this site');
+      const errorMsg = isUnsupported
+        ? 'Este site não é suportado para importação automática. Tente copiar a receita e adicionar manualmente.'
+        : 'Falha ao acessar a página. Verifique se a URL está correta.';
       return new Response(
-        JSON.stringify({ success: false, error: 'Falha ao acessar a página. Verifique se a URL está correta.' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ success: false, error: errorMsg }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
