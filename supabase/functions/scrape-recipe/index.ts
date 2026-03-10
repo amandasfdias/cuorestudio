@@ -162,7 +162,7 @@ IMPORTANTE: Retorne APENAS o JSON, sem markdown, sem explicações.`
       console.error('Failed to parse AI response:', parseError);
       return new Response(
         JSON.stringify({ success: false, error: 'Não foi possível extrair a receita desta página' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
