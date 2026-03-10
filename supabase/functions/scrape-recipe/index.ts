@@ -81,7 +81,7 @@ serve(async (req) => {
     if (!pageContent) {
       return new Response(
         JSON.stringify({ success: false, error: 'Não foi possível extrair conteúdo da página' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
