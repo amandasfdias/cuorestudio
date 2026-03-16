@@ -8,6 +8,8 @@ import CategoryCard from "@/components/recipes/CategoryCard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import AddRecipeModal from "@/components/recipes/AddRecipeModal";
+import { useCategoryImages, useUpdateCategoryImage } from "@/hooks/useCategoryImages";
+import { toast } from "sonner";
 
 import categorySalgados from "@/assets/category-salgados.jpg";
 import categoryDoces from "@/assets/category-doces.jpg";
@@ -28,11 +30,25 @@ const Recipes = () => {
   const navigate = useNavigate();
   const { data: recipes, isLoading } = useRecipes();
   const toggleFavorite = useToggleFavorite();
+  const { data: customImages } = useCategoryImages();
+  const updateCategoryImage = useUpdateCategoryImage();
+  const [uploadingCategory, setUploadingCategory] = useState<string | null>(null);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [addModalOpen, setAddModalOpen] = useState(false);
 
+  const handleCategoryImageChange = async (category: string, file: File) => {
+    setUploadingCategory(category);
+    try {
+      await updateCategoryImage.mutateAsync({ category, file });
+      toast.success("Imagem atualizada!");
+    } catch {
+      toast.error("Erro ao atualizar imagem");
+    } finally {
+      setUploadingCategory(null);
+    }
+  };
   useEffect(() => {
     if (!authLoading && !user) {
       navigate("/auth");
@@ -202,9 +218,11 @@ const Recipes = () => {
                 <CategoryCard
                   key={cat.name}
                   name={cat.name}
-                  image={cat.image}
+                  image={customImages?.[cat.name] || cat.image}
                   count={categoryCounts[cat.name] || 0}
                   onClick={() => handleCategoryClick(cat.name)}
+                  onImageChange={(file) => handleCategoryImageChange(cat.name, file)}
+                  isUploading={uploadingCategory === cat.name}
                 />
               ))}
             </div>
