@@ -31,6 +31,7 @@ const Recipes = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [addModalOpen, setAddModalOpen] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
