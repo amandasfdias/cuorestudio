@@ -30,11 +30,25 @@ const Recipes = () => {
   const navigate = useNavigate();
   const { data: recipes, isLoading } = useRecipes();
   const toggleFavorite = useToggleFavorite();
+  const { data: customImages } = useCategoryImages();
+  const updateCategoryImage = useUpdateCategoryImage();
+  const [uploadingCategory, setUploadingCategory] = useState<string | null>(null);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [addModalOpen, setAddModalOpen] = useState(false);
 
+  const handleCategoryImageChange = async (category: string, file: File) => {
+    setUploadingCategory(category);
+    try {
+      await updateCategoryImage.mutateAsync({ category, file });
+      toast.success("Imagem atualizada!");
+    } catch {
+      toast.error("Erro ao atualizar imagem");
+    } finally {
+      setUploadingCategory(null);
+    }
+  };
   useEffect(() => {
     if (!authLoading && !user) {
       navigate("/auth");
