@@ -1,11 +1,13 @@
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { BookOpen, Search, X } from "lucide-react";
+import { BookOpen, Search, X, ArrowLeft, Plus } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRecipes, useToggleFavorite } from "@/hooks/useRecipes";
 import RecipeCard from "@/components/recipes/RecipeCard";
 import CategoryCard from "@/components/recipes/CategoryCard";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import AddRecipeModal from "@/components/recipes/AddRecipeModal";
 
 import categorySalgados from "@/assets/category-salgados.jpg";
 import categoryDoces from "@/assets/category-doces.jpg";
