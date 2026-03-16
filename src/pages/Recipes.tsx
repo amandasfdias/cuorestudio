@@ -1,11 +1,13 @@
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { BookOpen, Search, X } from "lucide-react";
+import { BookOpen, Search, X, ArrowLeft, Plus } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRecipes, useToggleFavorite } from "@/hooks/useRecipes";
 import RecipeCard from "@/components/recipes/RecipeCard";
 import CategoryCard from "@/components/recipes/CategoryCard";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import AddRecipeModal from "@/components/recipes/AddRecipeModal";
 
 import categorySalgados from "@/assets/category-salgados.jpg";
 import categoryDoces from "@/assets/category-doces.jpg";
@@ -29,6 +31,7 @@ const Recipes = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [addModalOpen, setAddModalOpen] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -113,35 +116,78 @@ const Recipes = () => {
       {/* If searching or filtering by category, show filtered results */}
       {(searchQuery || selectedCategory) ? (
         <>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-display text-2xl text-foreground">
-              {selectedCategory ?? "Resultados"}
-            </h2>
-            <button
-              onClick={() => { setSelectedCategory(null); setSearchQuery(""); }}
-              className="text-sm font-body text-muted-foreground underline"
-            >
-              Limpar filtro
-            </button>
-          </div>
+          {selectedCategory && !searchQuery && (
+            <div className="flex items-center gap-3 mb-4">
+              <button
+                onClick={() => setSelectedCategory(null)}
+                className="w-9 h-9 rounded-full bg-muted flex items-center justify-center"
+              >
+                <ArrowLeft className="w-5 h-5 text-foreground" />
+              </button>
+              <div className="flex-1">
+                <h2 className="font-display text-3xl font-bold text-foreground">
+                  {selectedCategory}
+                </h2>
+                <p className="text-muted-foreground font-body text-xs">
+                  {filteredRecipes.length} {filteredRecipes.length === 1 ? "receita" : "receitas"}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {searchQuery && (
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-display text-2xl text-foreground">
+                Resultados
+              </h2>
+              <button
+                onClick={() => { setSelectedCategory(null); setSearchQuery(""); }}
+                className="text-sm font-body text-muted-foreground underline"
+              >
+                Limpar filtro
+              </button>
+            </div>
+          )}
+
           {filteredRecipes.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <BookOpen className="w-8 h-8 text-muted-foreground mb-2" />
               <p className="text-muted-foreground font-body text-sm">
                 Nenhuma receita encontrada
               </p>
+              {selectedCategory && (
+                <Button
+                  onClick={() => setAddModalOpen(true)}
+                  className="mt-4 rounded-xl gap-2 font-body"
+                >
+                  <Plus className="w-4 h-4" />
+                  Adicionar receita
+                </Button>
+              )}
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-3">
-              {filteredRecipes.map((recipe) => (
-                <RecipeCard
-                  key={recipe.id}
-                  recipe={recipe}
-                  onClick={() => navigate(`/recipe/${recipe.id}`)}
-                  onToggleFavorite={(e) => handleToggleFavorite(e, recipe.id, recipe.is_favorite)}
-                />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-2 gap-3">
+                {filteredRecipes.map((recipe) => (
+                  <RecipeCard
+                    key={recipe.id}
+                    recipe={recipe}
+                    onClick={() => navigate(`/recipe/${recipe.id}`)}
+                    onToggleFavorite={(e) => handleToggleFavorite(e, recipe.id, recipe.is_favorite)}
+                  />
+                ))}
+              </div>
+              {selectedCategory && (
+                <Button
+                  onClick={() => setAddModalOpen(true)}
+                  variant="outline"
+                  className="w-full mt-4 h-12 rounded-xl border-2 border-dashed border-muted-foreground/30 font-body text-muted-foreground gap-2"
+                >
+                  <Plus className="w-4 h-4" />
+                  Adicionar receita em {selectedCategory}
+                </Button>
+              )}
+            </>
           )}
         </>
       ) : (
@@ -193,6 +239,8 @@ const Recipes = () => {
           </section>
         </>
       )}
+
+      <AddRecipeModal open={addModalOpen} onOpenChange={setAddModalOpen} />
     </div>
   );
 };
