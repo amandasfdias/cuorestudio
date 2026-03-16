@@ -8,6 +8,8 @@ import CategoryCard from "@/components/recipes/CategoryCard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import AddRecipeModal from "@/components/recipes/AddRecipeModal";
+import { useCategoryImages, useUpdateCategoryImage } from "@/hooks/useCategoryImages";
+import { toast } from "sonner";
 
 import categorySalgados from "@/assets/category-salgados.jpg";
 import categoryDoces from "@/assets/category-doces.jpg";
