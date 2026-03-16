@@ -218,9 +218,11 @@ const Recipes = () => {
                 <CategoryCard
                   key={cat.name}
                   name={cat.name}
-                  image={cat.image}
+                  image={customImages?.[cat.name] || cat.image}
                   count={categoryCounts[cat.name] || 0}
                   onClick={() => handleCategoryClick(cat.name)}
+                  onImageChange={(file) => handleCategoryImageChange(cat.name, file)}
+                  isUploading={uploadingCategory === cat.name}
                 />
               ))}
             </div>
