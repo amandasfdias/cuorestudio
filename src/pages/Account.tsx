@@ -46,6 +46,10 @@ const Account = () => {
 
   return (
     <div className="px-6 py-8 pb-24">
+      <h1 className="font-display text-4xl font-bold text-foreground text-center mb-6">
+        Minha Conta
+      </h1>
+
       {/* Profile Header */}
       <div className="flex items-center gap-4 mb-6">
         <button
