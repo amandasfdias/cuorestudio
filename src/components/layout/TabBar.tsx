@@ -65,7 +65,7 @@ const TabBar = () => {
               >
                 <Icon
                   className={`w-6 h-6 transition-colors ${
-                    isActive ? "text-foreground" : "text-muted-foreground"
+                    isActive ? "text-foreground" : "text-muted-foreground/50"
                   }`}
                   strokeWidth={1.5}
                 />
