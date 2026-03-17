@@ -68,13 +68,13 @@
     --primary: 0 0% 98%;
     --primary-foreground: 0 0% 8%;
 
-    --secondary: 35 20% 18%;
+    --secondary: 0 0% 16%;
     --secondary-foreground: 0 0% 98%;
 
     --muted: 0 0% 18%;
     --muted-foreground: 0 0% 65%;
 
-    --accent: 35 25% 22%;
+    --accent: 0 0% 20%;
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 62.8% 30.6%;
@@ -84,10 +84,10 @@
     --input: 0 0% 20%;
     --ring: 0 0% 85%;
 
-    --warm-beige: 35 25% 22%;
-    --warm-beige-dark: 35 20% 30%;
-    --cream: 35 15% 12%;
-    --terracotta: 14 44% 64%;
+    --warm-beige: 0 0% 20%;
+    --warm-beige-dark: 0 0% 28%;
+    --cream: 0 0% 12%;
+    --terracotta: 0 0% 65%;
   }
 }
 
