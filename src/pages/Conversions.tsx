@@ -4,7 +4,7 @@ const tips = ["Para maior precisão da medição dos ingredientes secos, peneire
 const Conversions = () => {
   const navigate = useNavigate();
   return <div className="px-6 py-8 pb-24">
-      <h1 className="font-display text-5xl font-bold text-foreground text-center mb-8">
+      <h1 className="font-display text-4xl font-bold text-foreground text-center mb-8">
         Conversão de medidas
       </h1>
 

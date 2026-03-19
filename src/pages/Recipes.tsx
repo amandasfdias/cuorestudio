@@ -85,7 +85,7 @@ const Recipes = () => {
   if (authLoading || isLoading) {
     return (
       <div className="px-4 py-6">
-        <h1 className="font-display text-5xl font-bold text-foreground text-center mb-6">
+        <h1 className="font-display text-4xl font-bold text-foreground text-center mb-6">
           Minhas Receitas
         </h1>
         <div className="flex items-center justify-center py-16">
@@ -106,7 +106,7 @@ const Recipes = () => {
 
   return (
     <div className="px-4 py-6 pb-24">
-      <h1 className="font-display text-5xl font-bold text-foreground text-center mb-4">
+      <h1 className="font-display text-4xl font-bold text-foreground text-center mb-4">
         Minhas Receitas
       </h1>
 
