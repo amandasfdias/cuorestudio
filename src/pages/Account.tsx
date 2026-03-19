@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { User, Palette, Settings, Heart, LogOut, ChevronRight, Camera, BookOpen, Shield, FileText, Info, MessageCircle } from "lucide-react";
+import { User, Palette, Settings, Heart, LogOut, ChevronRight, Camera, BookOpen, Shield, FileText, Info } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProfile } from "@/hooks/useProfile";
 import { useRecipes, useFavoriteRecipes } from "@/hooks/useRecipes";
