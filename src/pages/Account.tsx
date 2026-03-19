@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { User, Palette, Settings, Heart, LogOut, ChevronRight, Camera, BookOpen, Shield, FileText, Info, MessageCircle } from "lucide-react";
+import { User, Palette, Settings, Heart, LogOut, ChevronRight, Camera, BookOpen, Shield, FileText, Info } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProfile } from "@/hooks/useProfile";
 import { useRecipes, useFavoriteRecipes } from "@/hooks/useRecipes";
@@ -54,10 +54,10 @@ const Account = () => {
       <div className="flex items-center gap-4 mb-6">
         <button
           onClick={() => setEditModalOpen(true)}
-          className="relative group"
+          className="relative group shrink-0"
           aria-label="Alterar foto de perfil"
         >
-          <div className="rounded-full p-[3px] border-2 border-primary/40">
+          <div className="rounded-full p-[3px] border-2 border-[hsl(var(--terracotta))]">
             <Avatar className="w-20 h-20">
               {profile?.avatar_url ? (
                 <AvatarImage src={profile.avatar_url} alt="Avatar" />
@@ -73,32 +73,24 @@ const Account = () => {
           </div>
         </button>
 
-        <div className="flex-1">
-          <h1 className="font-display text-3xl font-bold text-foreground uppercase">
+        <div className="flex-1 min-w-0">
+          <h2 className="font-display text-3xl font-bold text-foreground uppercase leading-tight">
             {displayName}
-          </h1>
-          <p className="text-muted-foreground font-body text-sm">@{displayUsername}</p>
+          </h2>
+          <p className="text-muted-foreground font-body text-sm mb-2">@{displayUsername}</p>
+          <div className="flex items-center gap-4">
+            <button onClick={() => navigate("/recipes")} className="flex items-center gap-1.5">
+              <BookOpen className="w-4 h-4 text-muted-foreground" />
+              <span className="font-body text-sm font-semibold text-foreground">{recipes?.length || 0}</span>
+              <span className="font-body text-xs text-muted-foreground uppercase tracking-wide">Receitas</span>
+            </button>
+            <button onClick={() => navigate("/favorites")} className="flex items-center gap-1.5">
+              <Heart className="w-4 h-4 text-muted-foreground" />
+              <span className="font-body text-sm font-semibold text-foreground">{favorites?.length || 0}</span>
+              <span className="font-body text-xs text-muted-foreground uppercase tracking-wide">Favoritos</span>
+            </button>
+          </div>
         </div>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-2 gap-3 mb-6">
-        <button
-          onClick={() => navigate("/recipes")}
-          className="bg-secondary rounded-xl p-4 flex flex-col items-center gap-2 transition-colors hover:bg-accent"
-        >
-          <BookOpen className="w-6 h-6 text-foreground" />
-          <span className="font-display text-2xl font-bold text-foreground">{recipes?.length || 0}</span>
-          <span className="font-body text-sm text-muted-foreground">Receitas</span>
-        </button>
-        <button
-          onClick={() => navigate("/favorites")}
-          className="bg-secondary rounded-xl p-4 flex flex-col items-center gap-2 transition-colors hover:bg-accent"
-        >
-          <Heart className="w-6 h-6 text-foreground" />
-          <span className="font-display text-2xl font-bold text-foreground">{favorites?.length || 0}</span>
-          <span className="font-body text-sm text-muted-foreground">Favoritos</span>
-        </button>
       </div>
 
       {/* Main Menu */}
@@ -107,42 +99,36 @@ const Account = () => {
           onClick={() => setEditModalOpen(true)}
           className="w-full flex items-center gap-4 px-4 py-4 transition-colors hover:bg-accent text-left border-b border-border"
         >
-          <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
-            <User className="w-5 h-5 text-muted-foreground" />
-          </div>
+          <User className="w-6 h-6 text-[hsl(var(--terracotta))]" strokeWidth={1.5} />
           <div className="flex-1">
             <span className="font-body text-foreground font-medium block">Conta</span>
-            <span className="font-body text-xs text-muted-foreground uppercase tracking-wide">Perfil, login e dados pessoais</span>
+            <span className="font-body text-xs text-muted-foreground uppercase tracking-widest">Perfil, login e dados pessoais</span>
           </div>
-          <ChevronRight className="w-4 h-4 text-muted-foreground" />
+          <ChevronRight className="w-5 h-5 text-muted-foreground/40" />
         </button>
 
         <button
           onClick={() => setAppearanceModalOpen(true)}
           className="w-full flex items-center gap-4 px-4 py-4 transition-colors hover:bg-accent text-left border-b border-border"
         >
-          <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
-            <MessageCircle className="w-5 h-5 text-muted-foreground" />
-          </div>
+          <Palette className="w-6 h-6 text-[hsl(var(--terracotta))]" strokeWidth={1.5} />
           <div className="flex-1">
             <span className="font-body text-foreground font-medium block">Aparência</span>
-            <span className="font-body text-xs text-muted-foreground uppercase tracking-wide">Tema e cores do aplicativo</span>
+            <span className="font-body text-xs text-muted-foreground uppercase tracking-widest">Tema e cores do aplicativo</span>
           </div>
-          <ChevronRight className="w-4 h-4 text-muted-foreground" />
+          <ChevronRight className="w-5 h-5 text-muted-foreground/40" />
         </button>
 
         <button
           onClick={() => setSettingsModalOpen(true)}
           className="w-full flex items-center gap-4 px-4 py-4 transition-colors hover:bg-accent text-left"
         >
-          <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
-            <Settings className="w-5 h-5 text-muted-foreground" />
-          </div>
+          <Settings className="w-6 h-6 text-[hsl(var(--terracotta))]" strokeWidth={1.5} />
           <div className="flex-1">
             <span className="font-body text-foreground font-medium block">Configurações</span>
-            <span className="font-body text-xs text-muted-foreground uppercase tracking-wide">Idioma e sistema de medidas</span>
+            <span className="font-body text-xs text-muted-foreground uppercase tracking-widest">Idioma e sistema de medidas</span>
           </div>
-          <ChevronRight className="w-4 h-4 text-muted-foreground" />
+          <ChevronRight className="w-5 h-5 text-muted-foreground/40" />
         </button>
       </div>
 
@@ -151,38 +137,32 @@ const Account = () => {
         <button
           className="w-full flex items-center gap-4 px-4 py-4 transition-colors hover:bg-accent text-left border-b border-border"
         >
-          <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
-            <Shield className="w-5 h-5 text-muted-foreground" />
-          </div>
+          <Shield className="w-6 h-6 text-[hsl(var(--terracotta))]" strokeWidth={1.5} />
           <div className="flex-1">
             <span className="font-body text-foreground font-medium block">Política de Privacidade</span>
           </div>
-          <ChevronRight className="w-4 h-4 text-muted-foreground" />
+          <ChevronRight className="w-5 h-5 text-muted-foreground/40" />
         </button>
 
         <button
           className="w-full flex items-center gap-4 px-4 py-4 transition-colors hover:bg-accent text-left border-b border-border"
         >
-          <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
-            <FileText className="w-5 h-5 text-muted-foreground" />
-          </div>
+          <FileText className="w-6 h-6 text-[hsl(var(--terracotta))]" strokeWidth={1.5} />
           <div className="flex-1">
             <span className="font-body text-foreground font-medium block">Termos e Condições</span>
           </div>
-          <ChevronRight className="w-4 h-4 text-muted-foreground" />
+          <ChevronRight className="w-5 h-5 text-muted-foreground/40" />
         </button>
 
         <button
           className="w-full flex items-center gap-4 px-4 py-4 transition-colors hover:bg-accent text-left"
         >
-          <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
-            <Info className="w-5 h-5 text-muted-foreground" />
-          </div>
+          <Info className="w-6 h-6 text-[hsl(var(--terracotta))]" strokeWidth={1.5} />
           <div className="flex-1">
             <span className="font-body text-foreground font-medium block">Sobre</span>
-            <span className="font-body text-xs text-muted-foreground uppercase tracking-wide">Versão App 1.0</span>
+            <span className="font-body text-xs text-muted-foreground uppercase tracking-widest">Versão App 1.0</span>
           </div>
-          <ChevronRight className="w-4 h-4 text-muted-foreground" />
+          <ChevronRight className="w-5 h-5 text-muted-foreground/40" />
         </button>
       </div>
 
@@ -192,13 +172,10 @@ const Account = () => {
           onClick={handleSignOut}
           className="w-full flex items-center gap-4 px-4 py-4 transition-colors hover:bg-accent text-left"
         >
-          <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
-            <LogOut className="w-5 h-5 text-destructive" />
-          </div>
+          <LogOut className="w-6 h-6 text-destructive" strokeWidth={1.5} />
           <span className="font-body text-destructive font-medium">Sair</span>
         </button>
       </div>
-
       <EditProfileModal
         open={editModalOpen}
         onOpenChange={setEditModalOpen}
